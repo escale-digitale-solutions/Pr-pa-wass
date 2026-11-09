@@ -248,8 +248,9 @@ export function Player() {
       s.lastX = e.clientX
       s.lastY = e.clientY
       const k = (e.pointerType === 'touch' ? 0.0046 : 0.0031) * (camera.fov / 58)
-      s.yawT += dx * k
-      s.pitchT = clamp(s.pitchT + dy * k, -1.05, 1.05)
+      // le regard suit le geste : glisser vers la droite = regarder à droite, vers le haut = regarder en haut
+      s.yawT -= dx * k
+      s.pitchT = clamp(s.pitchT - dy * k, -1.05, 1.05)
       s.lookRate = 16
       if (Math.abs(dx) + Math.abs(dy) > 2) {
         el.style.cursor = 'grabbing'
