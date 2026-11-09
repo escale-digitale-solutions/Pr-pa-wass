@@ -1,0 +1,107 @@
+# ARTIN BERRY — Galerie d'art virtuelle 3D
+
+Prototype V1 : une galerie d'art contemporaine navigable dans le navigateur.
+Hall d'entrée vitré, grande galerie sous verrière, 12 affiches d'art encadrées et éclairées, fiche descriptive et visionneuse plein écran pour chaque œuvre.
+
+## Lancer le projet
+
+Prérequis : Node.js 20 ou plus récent.
+
+```bash
+cd artin-berry-gallery
+npm install
+npm run dev        # http://localhost:5173
+```
+
+Version de production :
+
+```bash
+npm run build      # génère le dossier dist/
+npm run preview    # http://localhost:4173
+```
+
+Le dossier `dist/` est un site statique : il se dépose tel quel sur Netlify, Vercel, GitHub Pages ou tout hébergement web (les chemins sont relatifs, un sous-dossier fonctionne).
+
+## Commandes de visite
+
+| Action | Ordinateur | Mobile / tablette |
+| --- | --- | --- |
+| Regarder | cliquer-glisser, flèches ← → | glisser un doigt |
+| Se déplacer | clic au sol, ZQSD / WASD, flèches ↑ ↓, molette, Maj pour accélérer | toucher le sol, manette en bas à gauche |
+| Ouvrir une fiche | clic sur l'œuvre, ou Entrée quand la légende s'affiche | toucher l'œuvre |
+| Fermer | Échap ou bouton × | bouton × |
+
+Le menu « Œuvres » liste les pièces exposées (la caméra s'y rend toute seule) et permet de choisir la qualité du rendu : Haute, Équilibrée ou Légère. Sans choix manuel, la qualité baisse automatiquement si l'appareil peine.
+
+## Modifier ou ajouter une œuvre
+
+Tout se passe dans `src/data/artworks.json`, sans toucher au code.
+
+```jsonc
+{
+  "id": "klee-senecio",
+  "title": "Senecio",
+  "artist": "Paul Klee",          // facultatif
+  "year": "1922",                 // facultatif
+  "technique": "",                // facultatif : vide = non affiché
+  "dimensions": "",               // facultatif : vide = non affiché
+  "note": "Affiche d'art",        // facultatif
+  "description": "…",             // facultatif
+  "image": "artworks/tex/klee-senecio.jpg",       // texture de la scène 3D
+  "imageFull": "artworks/full/klee-senecio.jpg",  // original, pour la visionneuse
+  "room": "Grande galerie",
+  "placement": { "wall": "galerie-ouest", "position": -8.9, "height": 1.62 },
+  "display": { "width": 1.2, "height": 1.8 },     // taille affichée, en mètres
+  "frame": "oak"                  // oak | black | champagne | white
+}
+```
+
+- `placement.wall` : `galerie-ouest`, `galerie-est`, `galerie-nord` ou `hall-nord` (définis dans `src/scene/layout.ts`).
+- `placement.position` : position le long du mur, en mètres ; `height` : hauteur du centre de l'œuvre.
+- `display` doit respecter le rapport largeur / hauteur de l'image pour éviter toute déformation.
+- Le cadre, le cartel, le projecteur et la fiche sont générés automatiquement.
+
+Pour préparer de nouvelles images (copie de l'original + texture 1024 px) : placer les fichiers dans `public/artworks/full`, puis créer la version réduite dans `public/artworks/tex` — le script `scripts/prepare_assets.py` montre la marche à suivre (Python + Pillow).
+
+## Organisation
+
+```
+artin-berry-gallery/
+├── public/
+│   ├── logo/        logo officiel (original) + versions détourées dérivées
+│   ├── artworks/    full/ = originaux · tex/ = textures de la scène
+│   └── textures/    pierre du sol, enduit des murs, chêne
+├── scripts/         préparation des images
+└── src/
+    ├── data/        artworks.json (contenu) + types
+    ├── scene/       architecture, lumière, œuvres, mobilier, déplacement
+    ├── components/  accueil, interface, fiche, visionneuse, menu, aide
+    ├── styles/      ui.css
+    └── store.ts     état de la visite
+```
+
+Fichiers clés de la scène :
+
+- `layout.ts` : plan du bâtiment (dimensions, murs, verrière, mobilier, collisions).
+- `Lighting.tsx` : soleil (ombres), verrière et façade (lumières surfaciques), lumière indirecte.
+- `Artworks.tsx` : cadres, cartels, projecteurs, interactions.
+- `Player.tsx` + `nav.ts` : déplacement, collisions, recherche de chemin, mouvements de caméra.
+
+## Choix techniques
+
+- React 19, Vite, Three.js, React Three Fiber, Drei, postprocessing.
+- Matériaux PBR, ombres douces du soleil, occlusion ambiante (N8AO), reflets flous du sol, rendu des tons « neutre » pour ne pas dénaturer les couleurs des œuvres.
+- Les œuvres sont pour moitié éclairées par la scène et pour moitié auto-lumineuses : elles réagissent aux projecteurs sans dérive de couleur. Les fichiers originaux ne sont jamais retouchés.
+- Aucun serveur, aucune base de données, aucune dépendance en ligne à l'exécution.
+
+## Limites connues de cette V1
+
+- L'éclairage est calculé en temps réel, sans lightmaps précalculées : le rendu est soigné, mais ce n'est pas un rendu photoréaliste hors-ligne.
+- Le logo fourni mesure 447 px de large. Il est utilisé tel quel ; sur le mur du hall, ses contours restent légèrement doux de très près. Un fichier vectoriel (SVG) donnerait un résultat parfaitement net.
+- Technique et dimensions des œuvres ne sont pas renseignées (non communiquées) : les champs existent et s'affichent dès qu'ils sont remplis. Les descriptions sont des descriptions visuelles, à relire et compléter.
+- La fluidité a été vérifiée fonctionnellement, pas mesurée sur une gamme d'appareils : à tester sur les machines de démonstration.
+
+## Crédits
+
+- Textures de sol, d'enduit et de chêne : [Poly Haven](https://polyhaven.com) (licence CC0).
+- Polices : Cormorant Garamond et Jost (licence SIL Open Font).
