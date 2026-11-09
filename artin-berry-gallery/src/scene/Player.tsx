@@ -2,7 +2,7 @@ import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { ARTWORKS, POSES, byId } from '../data/artworks'
-import { joystick, useGallery } from '../store'
+import { joystick, lookStick, useGallery } from '../store'
 import { controller } from './controller'
 import { EYE } from './layout'
 import { type P2, PLAYER_R, findPath, pathLength, resolve } from './nav'
@@ -364,6 +364,13 @@ export function Player() {
       if (turn) {
         s.yawT += turn * 1.45 * dt
         s.lookRate = 10
+      }
+      // manette du regard : utilisable en même temps que la manette de déplacement
+      if (Math.abs(lookStick.x) + Math.abs(lookStick.y) > 0.05) {
+        const ease = (v: number) => Math.sign(v) * v * v
+        s.yawT -= ease(lookStick.x) * 2.1 * dt
+        s.pitchT = clamp(s.pitchT - ease(lookStick.y) * 1.3 * dt, -1.05, 1.05)
+        s.lookRate = 12
       }
       const mag = Math.hypot(f, r)
       if (mag > 1) {

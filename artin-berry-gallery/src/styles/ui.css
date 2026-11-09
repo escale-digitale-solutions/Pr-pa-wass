@@ -442,6 +442,19 @@ button:focus-visible {
   display: grid;
   place-items: center;
 }
+.joystick--left {
+  left: calc(22px + env(safe-area-inset-left, 0px));
+  bottom: calc(26px + env(safe-area-inset-bottom, 0px));
+}
+.joystick--right {
+  left: auto;
+  right: calc(22px + env(safe-area-inset-right, 0px));
+  bottom: calc(26px + env(safe-area-inset-bottom, 0px));
+}
+.joystick.joystick--right span {
+  background: rgba(249, 246, 240, 0.92);
+  border: 1px solid rgba(22, 21, 19, 0.35);
+}
 .joystick span {
   width: 42px;
   height: 42px;

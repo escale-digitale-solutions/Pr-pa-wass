@@ -16,7 +16,7 @@ export function Help() {
         <div className="help__grid">
           <div>
             <h3>Regarder</h3>
-            <p>{isTouch ? 'Faites glisser un doigt sur l’écran.' : 'Cliquez-glissez avec la souris. Les flèches ← → font pivoter le regard.'}</p>
+            <p>{isTouch ? 'Faites glisser un doigt sur l’écran, ou utilisez la manette en bas à droite, en même temps que celle de déplacement.' : 'Cliquez-glissez avec la souris. Les flèches ← → font pivoter le regard.'}</p>
           </div>
           <div>
             <h3>Se déplacer</h3>

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { asset, byId } from '../data/artworks'
-import { joystick, useGallery } from '../store'
+import { joystick, lookStick, useGallery } from '../store'
 
 /** Interface de visite : volontairement réduite à l'essentiel. */
 export function Hud() {
@@ -90,25 +90,30 @@ export function Hud() {
 
       <p className={`hint ${hintVisible && !showCaption ? 'is-shown' : ''}`}>
         {isTouch
-          ? 'Glissez pour regarder · Touchez le sol pour avancer · Touchez une œuvre'
+          ? 'Manette gauche : avancer · Manette droite ou glisser : regarder · Touchez une œuvre'
           : 'Cliquez-glissez pour regarder · Cliquez au sol pour avancer · ZQSD ou flèches pour marcher'}
       </p>
 
-      {isTouch && visiting && !selectedId && <Joystick />}
+      {isTouch && visiting && !selectedId && (
+        <>
+          <Joystick target={joystick} side="left" label="Manette de déplacement" />
+          <Joystick target={lookStick} side="right" label="Manette du regard" />
+        </>
+      )}
     </div>
   )
 }
 
-/** Manette tactile de déplacement. */
-function Joystick() {
+/** Manette tactile (déplacement à gauche, regard à droite), multi-touch. */
+function Joystick({ target, side, label }: { target: { x: number; y: number }; side: 'left' | 'right'; label: string }) {
   const base = useRef<HTMLDivElement>(null)
   const knob = useRef<HTMLSpanElement>(null)
   useEffect(() => {
     const el = base.current!
     let id = -1
     const set = (x: number, y: number) => {
-      joystick.x = x
-      joystick.y = y
+      target.x = x
+      target.y = y
       if (knob.current) knob.current.style.transform = `translate(${x * 30}px, ${y * 30}px)`
     }
     const update = (e: PointerEvent) => {
@@ -145,9 +150,9 @@ function Joystick() {
       el.removeEventListener('pointerup', up)
       el.removeEventListener('pointercancel', up)
     }
-  }, [])
+  }, [target])
   return (
-    <div className="joystick" ref={base} aria-label="Manette de déplacement">
+    <div className={`joystick joystick--${side}`} ref={base} aria-label={label}>
       <span ref={knob} />
     </div>
   )

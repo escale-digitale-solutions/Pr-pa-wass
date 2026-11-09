@@ -78,3 +78,5 @@ export const useGallery = create<GalleryState>((set, get) => ({
 
 /** Manette tactile : valeurs lues à chaque image par le contrôleur de déplacement. */
 export const joystick = { x: 0, y: 0 }
+/** Manette tactile du regard (à droite) : x = gauche / droite, y = haut / bas. */
+export const lookStick = { x: 0, y: 0 }
