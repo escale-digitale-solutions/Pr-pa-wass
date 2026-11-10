@@ -105,3 +105,10 @@ Fichiers clés de la scène :
 
 - Textures de sol, d'enduit et de chêne : [Poly Haven](https://polyhaven.com) (licence CC0).
 - Polices : Cormorant Garamond et Jost (licence SIL Open Font).
+
+## Publication sur GitHub Pages
+
+Le workflow `.github/workflows/deploy-pages.yml` publie la galerie à chaque mise à jour de `main` :
+**https://escale-digitale-solutions.github.io/Pr-pa-wass/**
+
+Activation (une seule fois) : dans le dépôt GitHub, *Settings → Pages → Build and deployment → Source : GitHub Actions*. Le workflow peut aussi être relancé à la main depuis l'onglet *Actions*.
