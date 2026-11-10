@@ -19,7 +19,7 @@ export function Landing() {
           dans la lumière.
         </h1>
         <p className="landing__text">
-          Parcourez le hall et la grande galerie, approchez-vous des œuvres et ouvrez leur fiche. {ARTWORKS.length} affiches
+          Traversez le hall, la rotonde et ses trois salles de couleur. Approchez-vous des œuvres, ouvrez leur fiche et composez votre panier. {ARTWORKS.length} affiches
           d'art y sont présentées, de Klee à Matisse, Monet et Van Gogh.
         </p>
         <button className="btn btn--primary" onClick={enter} tabIndex={shown ? 0 : -1}>
@@ -28,7 +28,7 @@ export function Landing() {
             <path d="M0 5h16M12 1l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="1.2" />
           </svg>
         </button>
-        <p className="landing__foot">Visite 3D en temps réel · {ARTWORKS.length} œuvres · Hall & grande galerie</p>
+        <p className="landing__foot">Visite 3D en temps réel · {ARTWORKS.length} œuvres · Hall, rotonde & 3 salles</p>
       </div>
     </section>
   )

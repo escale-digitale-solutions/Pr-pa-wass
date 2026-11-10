@@ -45,7 +45,8 @@ export function useMaterials(): Materials {
   return useMemo(() => {
     const aniso = Math.min(16, gl.capabilities.getMaxAnisotropy())
     const wall = new THREE.MeshStandardMaterial({
-      color: '#f2efe9',
+      color: '#ffffff',
+      vertexColors: true, // couleur de chaque salle portée par la géométrie
       roughness: 0.93,
       metalness: 0,
       normalMap: tile(wallNor, 1, 1, false, 4),
@@ -96,9 +97,9 @@ export function useMaterials(): Materials {
       stone,
       terrace,
       floorMaps: {
-        map: tile(floorDiff, 4, 8.72, true, aniso),
-        normalMap: tile(floorNor, 4, 8.72, false, aniso),
-        roughnessMap: tile(floorRough, 4, 8.72, false, aniso),
+        map: tile(floorDiff, 6.9, 6.3, true, aniso),
+        normalMap: tile(floorNor, 6.9, 6.3, false, aniso),
+        roughnessMap: tile(floorRough, 6.9, 6.3, false, aniso),
       },
     }
   }, [gl, wallNor, oakDiff, oakNor, oakRough, floorDiff, floorNor, floorRough])

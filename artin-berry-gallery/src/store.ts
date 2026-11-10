@@ -36,10 +36,55 @@ interface GalleryState {
   setVeil: (v: boolean) => void
   dismissHint: () => void
   degrade: () => void
+  /** panier : identifiant de l'œuvre → quantité */
+  cart: Record<string, number>
+  cartOpen: boolean
+  /** dernière œuvre ajoutée : déclenche l'animation et le message */
+  burst: { id: string; at: number } | null
+  addToCart: (id: string) => void
+  setQty: (id: string, qty: number) => void
+  clearCart: () => void
+  setCart: (v: boolean) => void
   setQuality: (q: Quality) => void
 }
 
+const CART_KEY = 'artin-berry-panier'
+function loadCart(): Record<string, number> {
+  try {
+    return JSON.parse(window.localStorage.getItem(CART_KEY) ?? '{}')
+  } catch {
+    return {}
+  }
+}
+function saveCart(cart: Record<string, number>) {
+  try {
+    window.localStorage.setItem(CART_KEY, JSON.stringify(cart))
+  } catch {
+    /* stockage indisponible : le panier vit le temps de la visite */
+  }
+}
+
 export const useGallery = create<GalleryState>((set, get) => ({
+  cart: loadCart(),
+  cartOpen: false,
+  burst: null,
+  addToCart: (id) => {
+    const cart = { ...get().cart, [id]: (get().cart[id] ?? 0) + 1 }
+    saveCart(cart)
+    set({ cart, burst: { id, at: performance.now() } })
+  },
+  setQty: (id, qty) => {
+    const cart = { ...get().cart }
+    if (qty <= 0) delete cart[id]
+    else cart[id] = qty
+    saveCart(cart)
+    set({ cart })
+  },
+  clearCart: () => {
+    saveCart({})
+    set({ cart: {} })
+  },
+  setCart: (v) => set({ cartOpen: v, menuOpen: false, helpOpen: false }),
   phase: 'landing',
   ready: false,
   selectedId: null,

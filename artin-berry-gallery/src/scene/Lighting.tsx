@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import * as THREE from 'three'
 import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLightUniformsLib.js'
 import { useGallery } from '../store'
-import { HALL, SKYLIGHT, SUN_DIR } from './layout'
+import { HALL, ROT, SUN_DIR } from './layout'
 
 RectAreaLightUniformsLib.init()
 
@@ -15,15 +15,15 @@ function Sun() {
   const quality = useGallery((s) => s.quality)
   const { position, target, cam } = useMemo(() => {
     const dir = new THREE.Vector3(...SUN_DIR).normalize()
-    const center = new THREE.Vector3(0, 3, -8)
+    const center = new THREE.Vector3(0, 3, 0)
     const pos = center.clone().addScaledVector(dir, -70)
     const z = dir.clone().multiplyScalar(-1)
     const x = new THREE.Vector3().crossVectors(new THREE.Vector3(0, 1, 0), z).normalize()
     const y = new THREE.Vector3().crossVectors(z, x)
     const b = { l: Infinity, r: -Infinity, bt: Infinity, t: -Infinity, n: Infinity, f: -Infinity }
-    for (const cx of [-9.5, 9.5])
+    for (const cx of [-15.5, 15.5])
       for (const cy of [-0.5, 9.2])
-        for (const cz of [-27.5, 12]) {
+        for (const cz of [-15.5, 14]) {
           const v = new THREE.Vector3(cx, cy, cz).sub(pos)
           const px = v.dot(x)
           const py = v.dot(y)
@@ -66,28 +66,13 @@ function Sun() {
 }
 
 export function Lighting() {
-  const skyW = SKYLIGHT.x1 - SKYLIGHT.x0
-  const skyD = SKYLIGHT.z1 - SKYLIGHT.z0
   return (
     <>
       <Sun />
-      {/* lumière zénithale diffuse de la verrière */}
-      <rectAreaLight
-        width={skyW}
-        height={skyD}
-        intensity={1.6}
-        color="#fff9f0"
-        position={[0, SKYLIGHT.top - 0.35, (SKYLIGHT.z0 + SKYLIGHT.z1) / 2]}
-        rotation-x={-Math.PI / 2}
-      />
-      {/* lumière du jour entrant par la façade vitrée */}
-      <rectAreaLight
-        width={HALL.x1 - HALL.x0}
-        height={HALL.h}
-        intensity={0.6}
-        color="#f4f8ff"
-        position={[0, HALL.h / 2, 9.9]}
-      />
+      {/* lumière zénithale de l'oculus de la rotonde */}
+      <rectAreaLight width={5.2} height={5.2} intensity={2.3} color="#fff9f0" position={[0, ROT.h + 0.1, 0]} rotation-x={-Math.PI / 2} />
+      {/* lumière du jour entrant par la façade vitrée du hall */}
+      <rectAreaLight width={HALL.x1 - HALL.x0} height={HALL.h} intensity={0.9} color="#f4f8ff" position={[0, HALL.h / 2, HALL.z1 - 0.1]} />
       {/* lumière indirecte : ciel blanc au zénith, rebond chaud du sol */}
       <Environment resolution={256} frames={1} environmentIntensity={1}>
         <color attach="background" args={['#d3d0ca']} />

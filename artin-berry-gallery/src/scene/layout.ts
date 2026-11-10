@@ -1,7 +1,7 @@
 /**
- * Plan de la galerie (en mètres).
+ * Plan « La Rotonde » (en mètres).
  * x : ouest (-) → est (+) · y : hauteur · z : nord (-) → sud (+)
- * Le hall est au sud (façade vitrée), la grande galerie au nord.
+ * Rotonde au centre (origine), hall au sud, salles à l'ouest, au nord et à l'est.
  */
 export interface Box {
   min: [number, number, number]
@@ -13,91 +13,89 @@ export interface Rect {
   z0: number
   z1: number
 }
-
 const b = (x0: number, x1: number, y0: number, y1: number, z0: number, z1: number): Box => ({
   min: [x0, y0, z0],
   max: [x1, y1, z1],
 })
 
 export const EYE = 1.62
-export const GAL = { x0: -8, x1: 8, z0: -26, z1: -0.3, h: 7 }
-export const HALL = { x0: -7, x1: 7, z0: 0.3, z1: 10, h: 5.6 }
-export const PORTAL = { hw: 2.4, h: 4.6 }
-export const SKYLIGHT = { x0: -3.2, x1: 3.2, z0: -22.8, z1: -2.6, top: 8.15 }
-export const PLINTH = 0.1 // joint creux en pied de mur
+export const PLINTH = 0.1
+/** Rotonde : rayon, hauteur, demi-largeur et hauteur des quatre portails. */
+export const ROT = { r: 6, h: 7, door: 1.5, doorH: 3.6 }
+export const HALL = { x0: -5, x1: 5, z0: 6.4, z1: 12, h: 4.6 }
 
-/** Murs porteurs (du joint creux jusqu'au plafond). */
+/** Salles : emprise intérieure, hauteur sous plafond et couleur des murs. */
+export const ROOMS = [
+  { id: 'nuit', name: 'Salle Bleu nuit', color: '#22364f', x0: -6, x1: 6, z0: -14, z1: -6.4, h: 5 },
+  { id: 'terra', name: 'Salle Terracotta', color: '#b8694a', x0: -14, x1: -6.4, z0: -6, z1: 6, h: 5 },
+  { id: 'ocre', name: 'Salle Ocre', color: '#c99a4f', x0: 6.4, x1: 14, z0: -6, z1: 6, h: 5 },
+  { id: 'hall', name: 'Hall', color: '#3b3733', x0: HALL.x0, x1: HALL.x1, z0: HALL.z0, z1: HALL.z1, h: HALL.h },
+]
+
+const IN = 5.75 // face intérieure du carré qui porte la rotonde
+const OUT = 6.4
+const D = ROT.door
+const TOP = 7.3
+const P = PLINTH
+
+/** Couleur du mur vu depuis le point (x, z) ; null = blanc galerie. */
+export function wallColorAt(x: number, z: number): string | null {
+  if (Math.abs(x) < IN && Math.abs(z) < IN) return null
+  for (const r of ROOMS) if (x > r.x0 - 0.05 && x < r.x1 + 0.05 && z > r.z0 - 0.05 && z < r.z1 + 0.05) return r.color
+  return null
+}
+
 export const WALLS: Box[] = [
-  // grande galerie
-  b(-8.4, -8, PLINTH, 7.3, -26.4, 0.3),
-  b(8, 8.4, PLINTH, 7.3, -26.4, 0.3),
-  b(-8.4, 8.4, PLINTH, 7.3, -26.4, -26),
-  // mur de refend hall / galerie, percé du grand portail
-  b(-8.4, -PORTAL.hw, PLINTH, 7.3, -0.3, 0.3),
-  b(PORTAL.hw, 8.4, PLINTH, 7.3, -0.3, 0.3),
+  // carré de la rotonde, percé de quatre portails
+  b(-OUT, -D, P, TOP, -OUT, -IN), b(D, OUT, P, TOP, -OUT, -IN),
+  b(-OUT, -D, P, TOP, IN, OUT), b(D, OUT, P, TOP, IN, OUT),
+  b(-OUT, -IN, P, TOP, -OUT, -D), b(-OUT, -IN, P, TOP, D, OUT),
+  b(IN, OUT, P, TOP, -OUT, -D), b(IN, OUT, P, TOP, D, OUT),
+  // salle nord
+  b(-6.4, -6, P, 5.3, -14.4, -6.4), b(6, 6.4, P, 5.3, -14.4, -6.4), b(-6.4, 6.4, P, 5.3, -14.4, -14),
+  // salle ouest
+  b(-14.4, -6.4, P, 5.3, -6.4, -6), b(-14.4, -6.4, P, 5.3, 6, 6.4), b(-14.4, -14, P, 5.3, -6.4, 6.4),
+  // salle est
+  b(6.4, 14.4, P, 5.3, -6.4, -6), b(6.4, 14.4, P, 5.3, 6, 6.4), b(14, 14.4, P, 5.3, -6.4, 6.4),
   // hall
-  b(-7.4, -7, PLINTH, 5.9, 0.3, 10.2),
-  b(7, 7.4, PLINTH, 5.9, 0.3, 10.2),
+  b(-5.4, -5, P, 4.9, 6.4, 12.2), b(5, 5.4, P, 4.9, 6.4, 12.2),
 ]
 
-/** Éléments hauts : linteau, plafonds, puits de lumière. */
+/** Linteaux, plafonds et couverture. */
 export const UPPER: Box[] = [
-  b(-PORTAL.hw, PORTAL.hw, PORTAL.h, 7.3, -0.3, 0.3),
-  // plafond du hall
-  b(-7.4, 7.4, HALL.h, 5.9, 0.3, 10.2),
-  // plafond de la galerie autour de la verrière
-  b(-8.4, SKYLIGHT.x0, GAL.h, 7.3, -26.4, 0.3),
-  b(SKYLIGHT.x1, 8.4, GAL.h, 7.3, -26.4, 0.3),
-  b(SKYLIGHT.x0, SKYLIGHT.x1, GAL.h, 7.3, -26.4, SKYLIGHT.z0),
-  b(SKYLIGHT.x0, SKYLIGHT.x1, GAL.h, 7.3, SKYLIGHT.z1, 0.3),
-  // joues du puits de lumière
-  b(SKYLIGHT.x0 - 0.2, SKYLIGHT.x0, 7.3, 8.4, SKYLIGHT.z0 - 0.2, SKYLIGHT.z1 + 0.2),
-  b(SKYLIGHT.x1, SKYLIGHT.x1 + 0.2, 7.3, 8.4, SKYLIGHT.z0 - 0.2, SKYLIGHT.z1 + 0.2),
-  b(SKYLIGHT.x0 - 0.2, SKYLIGHT.x1 + 0.2, 7.3, 8.4, SKYLIGHT.z0 - 0.2, SKYLIGHT.z0),
-  b(SKYLIGHT.x0 - 0.2, SKYLIGHT.x1 + 0.2, 7.3, 8.4, SKYLIGHT.z1, SKYLIGHT.z1 + 0.2),
-  // couverture (invisible depuis l'intérieur, bloque le soleil)
-  b(SKYLIGHT.x0 - 0.2, SKYLIGHT.x1 + 0.2, 8.4, 8.6, SKYLIGHT.z0 - 0.2, SKYLIGHT.z1 + 0.2),
+  b(-D, D, ROT.doorH, TOP, -OUT, -IN), b(-D, D, ROT.doorH, TOP, IN, OUT),
+  b(-OUT, -IN, ROT.doorH, TOP, -D, D), b(IN, OUT, ROT.doorH, TOP, -D, D),
+  b(-6.4, 6.4, 5, 5.3, -14.4, -6.4), b(-14.4, -6.4, 5, 5.3, -6.4, 6.4), b(6.4, 14.4, 5, 5.3, -6.4, 6.4),
+  b(-5.4, 5.4, HALL.h, 4.9, 6.4, 12.2),
+  b(-OUT, OUT, TOP, 7.5, -OUT, OUT),
 ]
 
-/** Lames de la verrière (caissons). */
-export const FINS: Box[] = (() => {
-  const out: Box[] = []
-  const n = 19
-  const step = (SKYLIGHT.z1 - SKYLIGHT.z0) / n
-  for (let i = 1; i < n; i++) {
-    const z = SKYLIGHT.z0 + i * step
-    out.push(b(SKYLIGHT.x0, SKYLIGHT.x1, 7.0, 7.72, z - 0.022, z + 0.022))
-  }
-  for (const x of [-1.07, 1.07]) out.push(b(x - 0.022, x + 0.022, 7.0, 7.72, SKYLIGHT.z0, SKYLIGHT.z1))
-  return out
-})()
-
-/** Mobilier (emprise au sol utilisée pour les collisions). */
 export const BENCHES = [
-  { x: 0, z: -8.2, len: 2.6 },
-  { x: 0, z: -18.1, len: 2.6 },
+  { x: -10.2, z: 0, len: 2.4 },
+  { x: 10.2, z: 0, len: 2.4 },
+  { x: 0, z: -10.2, len: 2.4 },
 ]
-export const DESK = { x: -4.55, z: 4.5, w: 2.8, d: 0.8, h: 1.06 }
+export const DESK = { x: 3.3, z: 9.7, w: 2.2, d: 0.7, h: 1.06 }
 
 const rectOf = (box: Box): Rect => ({ x0: box.min[0], x1: box.max[0], z0: box.min[2], z1: box.max[2] })
-
 export const COLLIDERS: Rect[] = [
   ...WALLS.map(rectOf),
-  // façade vitrée
-  { x0: -7.4, x1: 7.4, z0: 9.86, z1: 10.4 },
+  { x0: -5.4, x1: 5.4, z0: HALL.z1 - 0.14, z1: HALL.z1 + 0.4 },
   ...BENCHES.map((bn) => ({ x0: bn.x - 0.33, x1: bn.x + 0.33, z0: bn.z - bn.len / 2, z1: bn.z + bn.len / 2 })),
   { x0: DESK.x - DESK.w / 2, x1: DESK.x + DESK.w / 2, z0: DESK.z - DESK.d / 2, z1: DESK.z + DESK.d / 2 },
 ]
 
 /** Murs d'accrochage référencés dans src/data/artworks.json. */
-export const MOUNT_WALLS: Record<
-  string,
-  { axis: 'x' | 'z'; plane: number; normal: [number, number]; ceiling: number }
-> = {
-  'galerie-ouest': { axis: 'z', plane: GAL.x0, normal: [1, 0], ceiling: GAL.h },
-  'galerie-est': { axis: 'z', plane: GAL.x1, normal: [-1, 0], ceiling: GAL.h },
-  'galerie-nord': { axis: 'x', plane: GAL.z0, normal: [0, 1], ceiling: GAL.h },
-  'hall-nord': { axis: 'x', plane: HALL.z0, normal: [0, 1], ceiling: HALL.h },
+export const MOUNT_WALLS: Record<string, { axis: 'x' | 'z'; plane: number; normal: [number, number]; ceiling: number }> = {
+  'nuit-nord': { axis: 'x', plane: -14, normal: [0, 1], ceiling: 5 },
+  'nuit-ouest': { axis: 'z', plane: -6, normal: [1, 0], ceiling: 5 },
+  'nuit-est': { axis: 'z', plane: 6, normal: [-1, 0], ceiling: 5 },
+  'terra-ouest': { axis: 'z', plane: -14, normal: [1, 0], ceiling: 5 },
+  'terra-nord': { axis: 'x', plane: -6, normal: [0, 1], ceiling: 5 },
+  'terra-sud': { axis: 'x', plane: 6, normal: [0, -1], ceiling: 5 },
+  'ocre-est': { axis: 'z', plane: 14, normal: [-1, 0], ceiling: 5 },
+  'ocre-nord': { axis: 'x', plane: -6, normal: [0, 1], ceiling: 5 },
+  'ocre-sud': { axis: 'x', plane: 6, normal: [0, -1], ceiling: 5 },
 }
 
 /** Direction du soleil (du soleil vers la scène). */

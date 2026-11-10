@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
-import { ARTWORKS, asset, byId } from '../data/artworks'
+import { ARTWORKS, asset, byId, formatPrice } from '../data/artworks'
 import { useGallery } from '../store'
 import { CloseIcon } from './Help'
 
 /** Fiche descriptive d'une œuvre. Les champs non renseignés ne sont pas affichés. */
 export function ArtworkPanel() {
   const selectedId = useGallery((s) => s.selectedId)
-  const { select, setLightbox } = useGallery.getState()
+  const { select, setLightbox, addToCart, setCart } = useGallery.getState()
+  const qty = useGallery((s) => (selectedId ? (s.cart[selectedId] ?? 0) : 0))
   // on conserve la dernière œuvre affichée pendant l'animation de fermeture
   const [shownId, setShownId] = useState<string | null>(null)
   useEffect(() => {
@@ -24,6 +25,7 @@ export function ArtworkPanel() {
         ['Technique', a.technique],
         ['Dimensions', a.dimensions],
         ['Support', a.note],
+        ['Prix', a.price != null ? formatPrice(a.price) : undefined],
         ['Salle', a.room],
       ]
     : []
@@ -54,6 +56,23 @@ export function ArtworkPanel() {
               Observer en grand
             </span>
           </button>
+
+          {a.price != null && (
+            <div className="panel__buy">
+              <p className="panel__price">
+                {formatPrice(a.price)}
+                {a.dimensions && <small>Affiche {a.dimensions}</small>}
+              </p>
+              <button className="btn btn--primary" onClick={() => addToCart(a.id)} tabIndex={open ? 0 : -1}>
+                Ajouter au panier
+              </button>
+              {qty > 0 && (
+                <button className="text-btn" onClick={() => setCart(true)} tabIndex={open ? 0 : -1}>
+                  {qty} dans le panier · Voir
+                </button>
+              )}
+            </div>
+          )}
 
           {a.description && <p className="panel__text">{a.description}</p>}
 

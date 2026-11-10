@@ -67,10 +67,10 @@ function LogoWall() {
     }
   }, [mask, shadow])
   const img = mask.image as HTMLImageElement
-  const width = 3.5
+  const width = 2.7
   const height = (width * img.height) / img.width
-  const x = -4.7
-  const y = 2.62
+  const x = -3.25
+  const y = 2.45
   const target = useMemo(() => {
     const o = new THREE.Object3D()
     o.position.set(x, y - 0.15, HALL.z0)
@@ -84,10 +84,10 @@ function LogoWall() {
       </mesh>
       <mesh position={[x, y, HALL.z0 + 0.008]} renderOrder={3}>
         <planeGeometry args={[width, height]} />
-        <meshStandardMaterial color="#141312" alphaMap={mask} transparent roughness={0.5} metalness={0.2} depthWrite={false} />
+        <meshStandardMaterial color="#efe7da" alphaMap={mask} transparent roughness={0.5} metalness={0.2} depthWrite={false} />
       </mesh>
       <primitive object={target} />
-      <spotLight position={[x, HALL.h - 0.2, 3]} target={target} color="#fff1df" intensity={42} angle={0.5} penumbra={0.9} distance={14} decay={2} />
+      <spotLight position={[x, HALL.h - 0.2, HALL.z0 + 2.4]} target={target} color="#fff1df" intensity={26} angle={0.5} penumbra={0.9} distance={14} decay={2} />
     </group>
   )
 }

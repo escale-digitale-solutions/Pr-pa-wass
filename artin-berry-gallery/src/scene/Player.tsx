@@ -18,9 +18,9 @@ interface Travel {
   onDone?: () => void
 }
 
-const START = { x: 0, z: 8.7, yaw: 0, pitch: 0.04 }
-const LANDING = { x: 3.9, z: 9.0, yaw: 0.5, pitch: 0.075 }
-const LANDING_NARROW = { x: 0, z: 9.2, yaw: 0, pitch: 0.07 }
+const START = { x: 0, z: 10.9, yaw: 0, pitch: 0.04 }
+const LANDING = { x: 2.3, z: 11.2, yaw: 0.34, pitch: 0.07 }
+const LANDING_NARROW = { x: 0, z: 11.4, yaw: 0, pitch: 0.07 }
 
 const damp = THREE.MathUtils.damp
 const clamp = THREE.MathUtils.clamp
@@ -82,7 +82,7 @@ export function Player() {
   useEffect(() => {
     const locked = () => {
       const st = useGallery.getState()
-      return st.phase !== 'visiting' || !!st.selectedId || st.menuOpen || st.helpOpen
+      return st.phase !== 'visiting' || !!st.selectedId || st.menuOpen || st.helpOpen || st.cartOpen
     }
 
     const startTravel = (goal: P2, opts: Partial<Travel> = {}) => {
@@ -212,6 +212,7 @@ export function Player() {
       if (e.code === 'Escape') {
         if (st.lightbox) st.setLightbox(false)
         else if (st.selectedId) st.select(null)
+        else if (st.cartOpen) st.setCart(false)
         else if (st.menuOpen) st.setMenu(false)
         else if (st.helpOpen) st.setHelp(false)
         return
@@ -294,14 +295,14 @@ export function Player() {
     const st = useGallery.getState()
     s.t += dt
     const visiting = st.phase === 'visiting'
-    const locked = !visiting || !!st.selectedId || st.menuOpen || st.helpOpen
+    const locked = !visiting || !!st.selectedId || st.menuOpen || st.helpOpen || st.cartOpen
 
     if (!visiting && !st.veil) {
       // écran d'accueil : lent mouvement de caméra dans le hall
       // écran large : vue oblique sur le mur-logo et le portail ; écran étroit : vue dans l'axe
       const pose = state.size.width >= 860 ? LANDING : LANDING_NARROW
-      const tx = pose.x + Math.sin(s.t * 0.11) * 0.45
-      const tz = pose.z - (1 - Math.cos(s.t * 0.08)) * 0.4
+      const tx = pose.x + Math.sin(s.t * 0.11) * 0.3
+      const tz = pose.z - (1 - Math.cos(s.t * 0.08)) * 0.25
       s.x = damp(s.x, tx, 1.2, dt)
       s.z = damp(s.z, tz, 1.2, dt)
       s.yawT = pose.yaw + Math.sin(s.t * 0.11) * 0.035

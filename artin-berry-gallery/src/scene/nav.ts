@@ -1,4 +1,4 @@
-import { COLLIDERS, type Rect } from './layout'
+import { COLLIDERS, HALL, ROT, type Rect } from './layout'
 
 export const PLAYER_R = 0.42
 export interface P2 {
@@ -33,6 +33,13 @@ export function resolve(p: P2, r = PLAYER_R, rects: Rect[] = COLLIDERS): void {
         else if (m === t) p.z = c.z0 - r
         else p.z = c.z1 + r
       }
+    }
+    // mur courbe de la rotonde (hors des quatre portails)
+    const h = Math.hypot(p.x, p.z)
+    if (h < 6.4 && h > ROT.r - r && Math.abs(p.x) > ROT.door && Math.abs(p.z) > ROT.door) {
+      const k = (ROT.r - r) / h
+      p.x *= k
+      p.z *= k
     }
   }
 }
@@ -88,7 +95,7 @@ const NODES: P2[] = (() => {
     ]) {
       // on écarte les angles situés dans un mur ou hors du bâtiment
       if (inside(p, VIS_PAD)) continue
-      if (Math.abs(p.x) > 8 || p.z < -26 || p.z > 10) continue
+      if (Math.abs(p.x) > 14 || p.z < -14 || p.z > HALL.z1) continue
       out.push(p)
     }
   }

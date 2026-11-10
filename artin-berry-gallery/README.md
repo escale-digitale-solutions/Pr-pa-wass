@@ -1,7 +1,7 @@
 # ARTIN BERRY — Galerie d'art virtuelle 3D
 
 Prototype V1 : une galerie d'art contemporaine navigable dans le navigateur.
-Hall d'entrée vitré, grande galerie sous verrière, 12 affiches d'art encadrées et éclairées, fiche descriptive et visionneuse plein écran pour chaque œuvre.
+Plan « La Rotonde » : hall vitré, rotonde sous oculus et trois salles de couleur (terracotta, bleu nuit, ocre) sur un sol de marbre sombre. 12 affiches d'art encadrées et éclairées, avec fiche descriptive, visionneuse plein écran, panneau de verre (artiste, titre, format, prix) et panier.
 
 ## Lancer le projet
 
@@ -56,7 +56,8 @@ Tout se passe dans `src/data/artworks.json`, sans toucher au code.
 }
 ```
 
-- `placement.wall` : `galerie-ouest`, `galerie-est`, `galerie-nord` ou `hall-nord` (définis dans `src/scene/layout.ts`).
+- `placement.wall` : `terra-ouest`, `terra-nord`, `terra-sud`, `nuit-nord`, `nuit-ouest`, `nuit-est`, `ocre-est`, `ocre-nord` ou `ocre-sud` (définis dans `src/scene/layout.ts`).
+- `price` : prix en euros, affiché sur le panneau de verre, la fiche et le panier.
 - `placement.position` : position le long du mur, en mètres ; `height` : hauteur du centre de l'œuvre.
 - `display` doit respecter le rapport largeur / hauteur de l'image pour éviter toute déformation.
 - Le cadre, le cartel, le projecteur et la fiche sont générés automatiquement.
@@ -94,7 +95,14 @@ Fichiers clés de la scène :
 - Les œuvres sont pour moitié éclairées par la scène et pour moitié auto-lumineuses : elles réagissent aux projecteurs sans dérive de couleur. Les fichiers originaux ne sont jamais retouchés.
 - Aucun serveur, aucune base de données, aucune dépendance en ligne à l'exécution.
 
+## Panier
+
+Un clic sur le panneau de verre à côté d'une œuvre (ou sur « Ajouter au panier » dans la fiche) ajoute l'œuvre au panier, avec une animation lumineuse. Le panier est conservé dans le navigateur du visiteur. Le paiement en ligne (Stripe) n'est pas encore branché : le bouton de paiement est désactivé.
+
 ## Limites connues de cette V1
+
+- Les patios végétaux du plan ne sont pas modélisés, et la rotonde n'accueille pas encore d'œuvres (3 emplacements restent libres pour atteindre 15).
+- Les affiches sont montrées agrandies (1,30 × 1,95 m) pour la lisibilité ; le format vendu indiqué est 50 × 70 cm.
 
 - L'éclairage est calculé en temps réel, sans lightmaps précalculées : le rendu est soigné, mais ce n'est pas un rendu photoréaliste hors-ligne.
 - Le logo fourni mesure 447 px de large. Il est utilisé tel quel ; sur le mur du hall, ses contours restent légèrement doux de très près. Un fichier vectoriel (SVG) donnerait un résultat parfaitement net.

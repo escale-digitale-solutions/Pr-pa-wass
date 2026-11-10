@@ -80,7 +80,7 @@ export function Experience() {
       shadows="percentage"
       dpr={[1, maxDpr]}
       gl={{ antialias: false, powerPreference: 'high-performance', stencil: false }}
-      camera={{ fov: 58, near: 0.08, far: 320, position: [3.9, 1.62, 9] }}
+      camera={{ fov: 58, near: 0.08, far: 320, position: [2.3, 1.62, 11.2] }}
       onCreated={({ gl }) => {
         gl.toneMappingExposure = 1
       }}

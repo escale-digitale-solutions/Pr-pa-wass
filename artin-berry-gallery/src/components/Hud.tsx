@@ -10,7 +10,16 @@ export function Hud() {
   const hoveredId = useGallery((s) => s.hoveredId)
   const hintShown = useGallery((s) => s.hintShown)
   const isTouch = useGallery((s) => s.isTouch)
-  const { setMenu, setHelp, goHome, select } = useGallery.getState()
+  const { setMenu, setHelp, goHome, select, setCart } = useGallery.getState()
+  const count = useGallery((s) => Object.values(s.cart).reduce((a, b) => a + b, 0))
+  const burst = useGallery((s) => s.burst)
+  const [toast, setToast] = useState<string | null>(null)
+  useEffect(() => {
+    if (!burst) return
+    setToast(byId(burst.id)?.title ?? null)
+    const id = window.setTimeout(() => setToast(null), 2600)
+    return () => window.clearTimeout(id)
+  }, [burst])
   const visiting = phase === 'visiting'
   const [fs, setFs] = useState(false)
   const canFs = typeof document !== 'undefined' && !!document.documentElement.requestFullscreen
@@ -47,6 +56,14 @@ export function Hud() {
         <nav className="hud__actions">
           <button className="text-btn" onClick={() => setMenu(true)} tabIndex={visiting ? 0 : -1}>
             Œuvres
+          </button>
+          <button key={burst?.at ?? 0} className={`icon-btn cart-btn ${burst ? 'is-bumped' : ''}`} onClick={() => setCart(true)} aria-label={`Panier, ${count} article${count > 1 ? 's' : ''}`} title="Panier" tabIndex={visiting ? 0 : -1}>
+            <svg width="17" height="17" viewBox="0 0 17 17" aria-hidden>
+              <path d="M1 2h2.2l1.9 8.4h8.3L15 4.6H4" fill="none" stroke="currentColor" strokeWidth="1.1" />
+              <circle cx="6" cy="13.6" r="1.1" fill="currentColor" />
+              <circle cx="12.4" cy="13.6" r="1.1" fill="currentColor" />
+            </svg>
+            {count > 0 && <span className="cart-btn__badge">{count}</span>}
           </button>
           <button className="icon-btn" onClick={() => setHelp(true)} aria-label="Aide aux commandes" title="Aide" tabIndex={visiting ? 0 : -1}>
             <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden>
@@ -92,6 +109,14 @@ export function Hud() {
         {isTouch
           ? 'Manette gauche : avancer · Manette droite ou glisser : regarder · Touchez une œuvre'
           : 'Cliquez-glissez pour regarder · Cliquez au sol pour avancer · ZQSD ou flèches pour marcher'}
+      </p>
+
+      <p className={`toast ${toast ? 'is-shown' : ''}`} role="status">
+        {toast && (
+          <>
+            <em>{toast}</em> ajouté au panier
+          </>
+        )}
       </p>
 
       {isTouch && visiting && !selectedId && (

@@ -1,4 +1,5 @@
 import { ArtworkPanel } from './components/ArtworkPanel'
+import { Cart } from './components/Cart'
 import { Help } from './components/Help'
 import { Hud } from './components/Hud'
 import { Landing } from './components/Landing'
@@ -18,6 +19,7 @@ export default function App() {
       <Landing />
       <ArtworkPanel />
       <Menu />
+      <Cart />
       <Help />
       <Lightbox />
       <Loader />

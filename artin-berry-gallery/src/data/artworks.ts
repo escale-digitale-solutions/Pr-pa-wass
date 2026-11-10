@@ -11,6 +11,8 @@ export interface Artwork {
   technique?: string
   dimensions?: string
   note?: string
+  /** prix de vente en euros */
+  price?: number
   description?: string
   /** texture utilisée dans la scène 3D */
   image: string
@@ -50,3 +52,6 @@ export function poseOf(a: Artwork): ArtworkPose {
 export const POSES: Record<string, ArtworkPose> = Object.fromEntries(ARTWORKS.map((a) => [a.id, poseOf(a)]))
 
 export const byId = (id: string | null) => ARTWORKS.find((a) => a.id === id) ?? null
+
+export const formatPrice = (v: number) =>
+  new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: Number.isInteger(v) ? 0 : 2 }).format(v)
