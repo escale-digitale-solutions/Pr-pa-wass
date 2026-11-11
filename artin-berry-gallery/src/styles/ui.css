@@ -871,119 +871,6 @@ button:focus-visible {
 }
 
 /* ---------- écrans étroits ---------- */
-@media (max-width: 859px) {
-  .landing {
-    align-items: flex-end;
-  }
-  .landing__plate {
-    width: 100%;
-    margin: 0;
-    padding: 30px 26px calc(30px + env(safe-area-inset-bottom));
-    transform: translateY(14px);
-    border: 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.6);
-  }
-  .landing__logo {
-    width: 200px;
-  }
-  .landing__rule {
-    margin: 22px 0 18px;
-  }
-  .landing__title {
-    font-size: 34px;
-    margin: 12px 0 14px;
-  }
-  .landing__text {
-    font-size: 14px;
-    margin-bottom: 24px;
-    max-width: none;
-  }
-  .landing .btn {
-    align-self: stretch;
-  }
-  .landing__foot {
-    margin-top: 22px;
-  }
-  .hud__top {
-    padding: 12px 14px;
-  }
-  .hud__brand img {
-    height: 13px;
-  }
-  .hud__actions {
-    padding-left: 12px;
-    gap: 0;
-  }
-  .caption {
-    top: 74px;
-    bottom: auto;
-    gap: 10px;
-    padding: 9px 16px;
-    border-radius: 30px;
-    transform: translate(-50%, -8px);
-  }
-  .caption__artist {
-    display: none;
-  }
-  .caption__title {
-    font-size: 17px;
-  }
-  .caption__cta {
-    padding-left: 10px;
-    font-size: 9px;
-  }
-  .toast {
-    top: 126px;
-    right: 50%;
-    transform: translate(50%, -8px);
-    white-space: nowrap;
-  }
-  .toast.is-shown {
-    transform: translate(50%, 0);
-  }
-  .hint {
-    bottom: 150px;
-    white-space: normal;
-    text-align: center;
-    border-radius: 16px;
-    line-height: 1.7;
-    width: calc(100vw - 32px);
-  }
-  .panel {
-    top: auto;
-    left: 0;
-    width: 100%;
-    height: 50%;
-    transform: translateY(104%);
-    border-left: 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.7);
-    box-shadow: 0 -30px 70px -40px rgba(40, 32, 20, 0.45);
-  }
-  .panel__scroll {
-    padding: 12px 24px 34px;
-  }
-  .panel__head {
-    margin-bottom: 14px;
-  }
-  .panel__title {
-    font-size: 30px;
-  }
-  .panel__figure {
-    margin: 22px 0;
-    padding: 18px;
-  }
-  .panel__text {
-    font-size: 18px;
-  }
-  .help__grid {
-    grid-template-columns: 1fr;
-    gap: 22px;
-  }
-  .lightbox__bar p {
-    font-size: 16px;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;
@@ -1136,4 +1023,218 @@ button:focus-visible {
 }
 .cart__foot .text-btn {
   align-self: center;
+}
+
+.no-webgl {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: 32px;
+  text-align: center;
+  font-family: var(--serif);
+  font-size: 22px;
+}
+
+/* ---------- petits écrans : interface compacte ---------- */
+@media (max-width: 859px), (max-height: 520px) {
+  .hud__top {
+    padding: calc(12px + env(safe-area-inset-top, 0px)) calc(14px + env(safe-area-inset-right, 0px)) 12px calc(14px + env(safe-area-inset-left, 0px));
+  }
+  .hud__brand img {
+    height: 13px;
+  }
+  .hud__actions {
+    padding-left: 12px;
+    gap: 0;
+  }
+  .caption {
+    top: calc(74px + env(safe-area-inset-top, 0px));
+    bottom: auto;
+    gap: 10px;
+    padding: 9px 16px;
+    border-radius: 30px;
+    transform: translate(-50%, -8px);
+  }
+  .caption__artist {
+    display: none;
+  }
+  .caption__title {
+    font-size: 17px;
+  }
+  .caption__cta {
+    padding-left: 10px;
+    font-size: 9px;
+  }
+  .toast {
+    top: calc(126px + env(safe-area-inset-top, 0px));
+    right: 50%;
+    transform: translate(50%, -8px);
+    white-space: nowrap;
+  }
+  .toast.is-shown {
+    transform: translate(50%, 0);
+  }
+  .panel__scroll {
+    padding: 12px 24px calc(34px + env(safe-area-inset-bottom, 0px));
+  }
+  .panel__head {
+    margin-bottom: 14px;
+  }
+  .panel__title {
+    font-size: 30px;
+  }
+  .panel__figure {
+    margin: 22px 0;
+    padding: 18px;
+  }
+  .panel__text {
+    font-size: 18px;
+  }
+  .panel__price {
+    font-size: 34px;
+  }
+  .menu {
+    padding: calc(14px + env(safe-area-inset-top, 0px)) 22px 0;
+  }
+  .help__grid {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+  .lightbox__bar p {
+    font-size: 16px;
+  }
+}
+
+/* ---------- écran étroit tenu à la verticale : plaque d'accueil et fiche en bas ---------- */
+@media (max-width: 859px) and (orientation: portrait) {
+  .landing {
+    align-items: flex-end;
+  }
+  .landing__plate {
+    width: 100%;
+    max-height: 72%;
+    margin: 0;
+    padding: 30px 26px calc(30px + env(safe-area-inset-bottom, 0px));
+    transform: translateY(14px);
+    border: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.6);
+    justify-content: flex-start;
+  }
+  .landing__logo {
+    width: 200px;
+  }
+  .landing__rule {
+    margin: 22px 0 18px;
+  }
+  .landing__title {
+    font-size: 34px;
+    margin: 12px 0 14px;
+  }
+  .landing__text {
+    font-size: 14px;
+    margin-bottom: 24px;
+    max-width: none;
+  }
+  .landing .btn {
+    align-self: stretch;
+  }
+  .landing__foot {
+    margin-top: 22px;
+  }
+  .hint {
+    bottom: calc(150px + env(safe-area-inset-bottom, 0px));
+    white-space: normal;
+    text-align: center;
+    border-radius: 16px;
+    line-height: 1.7;
+    width: calc(100vw - 32px);
+  }
+  .panel {
+    top: auto;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    transform: translateY(104%);
+    border-left: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 -30px 70px -40px rgba(40, 32, 20, 0.45);
+  }
+}
+
+/* ---------- téléphone tenu à l'horizontale ---------- */
+@media (max-height: 520px) and (orientation: landscape) {
+  .landing__plate {
+    width: min(400px, 46vw);
+    margin: 10px 10px 10px calc(10px + env(safe-area-inset-left, 0px));
+    padding: 18px 24px;
+    justify-content: flex-start;
+  }
+  .landing__logo {
+    width: 170px;
+  }
+  .landing__rule {
+    margin: 12px 0 10px;
+  }
+  .landing__title {
+    font-size: 26px;
+    margin: 8px 0 10px;
+  }
+  .landing__text {
+    font-size: 13px;
+    line-height: 1.55;
+    margin-bottom: 14px;
+  }
+  .landing__foot {
+    display: none;
+  }
+  .btn {
+    height: 46px;
+  }
+  .hint {
+    bottom: 16px;
+    white-space: normal;
+    text-align: center;
+    border-radius: 16px;
+    line-height: 1.6;
+    max-width: calc(100vw - 300px);
+  }
+  .joystick {
+    width: 92px;
+    height: 92px;
+  }
+  .panel__figure img {
+    max-height: 46vh;
+  }
+}
+
+/* ---------- très petits téléphones ---------- */
+@media (max-width: 400px) {
+  .hud__home {
+    display: none;
+  }
+  .hud__brand {
+    padding: 12px 13px;
+  }
+  .hud__actions .text-btn {
+    margin-right: 2px;
+    letter-spacing: 0.2em;
+  }
+  .landing__title {
+    font-size: 30px;
+  }
+}
+
+/* ---------- téléphones courts tenus à la verticale ---------- */
+@media (max-height: 700px) and (orientation: portrait) {
+  .landing__foot {
+    display: none;
+  }
+  .landing__text {
+    margin-bottom: 18px;
+  }
+  .landing__plate {
+    max-height: 78%;
+  }
 }

@@ -311,6 +311,7 @@ function polishedStone(mat: THREE.Material | null) {
 /** Sol en marbre noir veiné, poli, avec reflets de l'architecture et des œuvres. */
 function Floor() {
   const quality = useGallery((s) => s.quality)
+  const isTouch = useGallery((s) => s.isTouch)
   const gl = useThree((s) => s.gl)
   const marble = useMemo(() => {
     const t = marbleTexture(2048)
@@ -342,7 +343,7 @@ function Floor() {
           <MeshReflectorMaterial
             ref={polishedStone}
             map={marble}
-            resolution={1024}
+            resolution={isTouch ? 512 : 1024}
             blur={[700, 300]}
             mixBlur={1}
             mixStrength={0.52}

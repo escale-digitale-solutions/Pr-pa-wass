@@ -1,7 +1,6 @@
 import { PerformanceMonitor } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
-import { Bloom, EffectComposer, N8AO, SMAA, Vignette } from '@react-three/postprocessing'
-import { Suspense, useEffect, useState } from 'react'
+import { Suspense, lazy, useEffect, useState } from 'react'
 import { useGallery } from '../store'
 import { Architecture } from './Architecture'
 import { Artworks } from './Artworks'
@@ -9,6 +8,9 @@ import { Furniture } from './Furniture'
 import { Lighting } from './Lighting'
 import { useMaterials } from './materials'
 import { Player } from './Player'
+
+// les effets d'ambiance ne sont téléchargés que par les appareils qui les affichent
+const Effects = lazy(() => import('./Effects'))
 
 function Ready() {
   const setReady = useGallery((s) => s.setReady)
@@ -33,33 +35,6 @@ function Scene() {
   )
 }
 
-/** Qualité « Haute » : occlusion ambiante et halo des sources lumineuses, en plus du rendu direct. */
-function Effects() {
-  return (
-    <EffectComposer multisampling={0} enableNormalPass={false}>
-      <N8AO
-        ref={(pass: { autoDetectTransparency: boolean; configuration: { transparencyAware: boolean } } | null) => {
-          // les halos et ombres « peints » sont des surfaces transparentes : sans ce réglage,
-          // l'occlusion s'interromprait net à leur bord
-          if (!pass) return
-          pass.autoDetectTransparency = false
-          pass.configuration.transparencyAware = false
-        }}
-        aoRadius={0.9}
-        distanceFalloff={0.7}
-        intensity={2}
-        aoSamples={16}
-        denoiseSamples={8}
-        denoiseRadius={10}
-        color="#1c140c"
-      />
-      <Bloom mipmapBlur luminanceThreshold={1.05} luminanceSmoothing={0.2} intensity={0.32} radius={0.72} />
-      <SMAA />
-      <Vignette offset={0.22} darkness={0.32} />
-    </EffectComposer>
-  )
-}
-
 /**
  * Netteté : l'image est calculée à la résolution de l'écran (jusqu'à 2,5 fois sa définition logique
  * sur téléphone), avec lissage matériel des contours. Aucune correction de tons : les œuvres
@@ -70,7 +45,8 @@ export function Experience() {
   const degrade = useGallery((s) => s.degrade)
   const isTouch = useGallery((s) => s.isTouch)
   // la netteté passe avant les effets : même au palier « Légère », un téléphone garde une image fine
-  const cap = isTouch ? (quality === 'medium' ? 2.5 : 2) : quality === 'low' ? 1.5 : 2
+  const saver = useGallery((s) => s.saver)
+  const cap = saver ? (isTouch ? 1.5 : 1) : isTouch ? (quality === 'medium' ? 2.5 : 2) : quality === 'low' ? 1.5 : 2
   const dpr = Math.min(window.devicePixelRatio || 1, cap)
   // l'adaptation automatique ne démarre qu'une fois la scène chargée et stabilisée
   const ready = useGallery((s) => s.ready)
@@ -84,6 +60,7 @@ export function Experience() {
   return (
     <Canvas
       className="gallery-canvas"
+      fallback={<p className="no-webgl">Cet appareil ne peut pas afficher la visite en 3D. Essayez avec un navigateur récent.</p>}
       flat
       dpr={dpr}
       gl={{ antialias: true, powerPreference: 'high-performance', stencil: false }}
@@ -94,7 +71,11 @@ export function Experience() {
         <Scene />
       </Suspense>
       <Player />
-      {quality === 'high' && <Effects />}
+      {quality === 'high' && (
+        <Suspense fallback={null}>
+          <Effects />
+        </Suspense>
+      )}
       {monitor && !locked && <PerformanceMonitor ms={300} iterations={8} threshold={0.7} bounds={() => [30, 120]} onDecline={degrade} />}
     </Canvas>
   )

@@ -24,7 +24,7 @@ const BUTTON = { x: 48, y: 690, w: 384, h: 82 }
 const BUTTON_ZONE = [0.64, 0.83]
 const BURST_MS = 2300
 /** Distance sous laquelle l'œuvre passe en pleine résolution. */
-const HIRES_DISTANCE = 4.8
+const HIRES_DISTANCE = 6.5
 
 const DEBUG = new URLSearchParams(window.location.search).has('debug')
 

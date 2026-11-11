@@ -2,7 +2,7 @@ import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { ARTWORKS, POSES, byId } from '../data/artworks'
-import { joystick, lookStick, useGallery } from '../store'
+import { joystick, lookStick, sheetLayout, useGallery } from '../store'
 import { controller } from './controller'
 import { EYE, TABLET } from './layout'
 import { type P2, PLAYER_R, findPath, pathLength, resolve } from './nav'
@@ -31,7 +31,7 @@ const near = (a: number, ref: number) => a + Math.round((ref - a) / (Math.PI * 2
 function freeArea() {
   const W = window.innerWidth
   const H = window.innerHeight
-  if (W >= 860) {
+  if (!sheetLayout(W, H)) {
     const panel = Math.min(500, W * 0.4)
     return { w: W - panel, h: H, offX: panel / 2, offY: 0 }
   }
@@ -202,7 +202,7 @@ export function Player() {
           st.setVeil(true)
           window.setTimeout(() => {
             s.travel = null
-            const pose = window.innerWidth >= 860 ? LANDING : LANDING_NARROW
+            const pose = sheetLayout() ? LANDING_NARROW : LANDING
             s.x = pose.x
             s.z = pose.z
             s.yaw = s.yawT = pose.yaw
@@ -308,7 +308,7 @@ export function Player() {
     if (!visiting && !st.veil) {
       // écran d'accueil : lent mouvement de caméra dans le hall
       // écran large : vue oblique sur le mur-logo et le portail ; écran étroit : vue dans l'axe
-      const pose = state.size.width >= 860 ? LANDING : LANDING_NARROW
+      const pose = sheetLayout(state.size.width, state.size.height) ? LANDING_NARROW : LANDING
       const tx = pose.x + Math.sin(s.t * 0.11) * 0.3
       const tz = pose.z - (1 - Math.cos(s.t * 0.08)) * 0.25
       s.x = damp(s.x, tx, 1.2, dt)
@@ -317,7 +317,7 @@ export function Player() {
       s.pitchT = pose.pitch
       s.lookRate = 1.5
       const W = state.size.width
-      if (W >= 860) {
+      if (!sheetLayout(W, state.size.height)) {
         s.offXT = -(Math.min(480, W * 0.42) + 28) / 2
         s.offYT = 0
       } else {
