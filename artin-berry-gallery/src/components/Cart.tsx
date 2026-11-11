@@ -21,7 +21,7 @@ export function Cart() {
         </div>
         <div className="menu__scroll">
           {lines.length === 0 ? (
-            <p className="cart__empty">Votre panier est vide. Dans la galerie, cliquez sur le panneau de verre à côté d'une œuvre pour l'ajouter.</p>
+            <p className="cart__empty">Votre panier est vide. Dans la galerie, utilisez le bouton « Ajouter au panier » de la tablette de verre placée à côté de chaque œuvre.</p>
           ) : (
             <ul className="menu__list cart__list">
               {lines.map((a) => (

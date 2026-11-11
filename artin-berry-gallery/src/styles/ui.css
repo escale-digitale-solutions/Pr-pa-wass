@@ -333,18 +333,22 @@ button:focus-visible {
 }
 .hud__brand {
   padding: 13px 18px;
-  background: rgba(249, 246, 240, 0.72);
+  background: rgba(249, 246, 240, 0.8);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-radius: 40px;
   border: 1px solid rgba(255, 255, 255, 0.55);
+}
+.hud__brand,
+.hud__actions {
+  box-shadow: 0 6px 22px -10px rgba(30, 24, 14, 0.35), 0 0 0 1px rgba(22, 21, 19, 0.06);
 }
 .hud__actions {
   display: flex;
   align-items: center;
   gap: 6px;
   padding: 3px 8px 3px 18px;
-  background: rgba(249, 246, 240, 0.72);
+  background: rgba(249, 246, 240, 0.8);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-radius: 40px;
@@ -911,15 +915,31 @@ button:focus-visible {
     gap: 0;
   }
   .caption {
-    bottom: 150px;
-    flex-wrap: wrap;
-    justify-content: center;
-    white-space: normal;
-    gap: 6px 14px;
-    padding: 13px 18px;
+    top: 74px;
+    bottom: auto;
+    gap: 10px;
+    padding: 9px 16px;
+    border-radius: 30px;
+    transform: translate(-50%, -8px);
+  }
+  .caption__artist {
+    display: none;
   }
   .caption__title {
-    font-size: 19px;
+    font-size: 17px;
+  }
+  .caption__cta {
+    padding-left: 10px;
+    font-size: 9px;
+  }
+  .toast {
+    top: 126px;
+    right: 50%;
+    transform: translate(50%, -8px);
+    white-space: nowrap;
+  }
+  .toast.is-shown {
+    transform: translate(50%, 0);
   }
   .hint {
     bottom: 150px;

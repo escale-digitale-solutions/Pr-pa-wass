@@ -1,7 +1,7 @@
 # ARTIN BERRY — Galerie d'art virtuelle 3D
 
 Prototype V1 : une galerie d'art contemporaine navigable dans le navigateur.
-Plan « La Rotonde » : hall vitré, rotonde sous oculus et trois salles de couleur (terracotta, bleu nuit, ocre) sur un sol de marbre sombre. 12 affiches d'art encadrées et éclairées, avec fiche descriptive, visionneuse plein écran, panneau de verre (artiste, titre, format, prix) et panier.
+Plan « La Rotonde » : hall vitré, rotonde sous oculus et trois salles de couleur (terracotta, bleu nuit, ocre) sur un sol de marbre sombre. 12 affiches d'art encadrées et éclairées, avec fiche descriptive, visionneuse plein écran, tablette de verre (artiste, titre, année, dimensions, prix, bouton d'ajout au panier) et panier.
 
 ## Lancer le projet
 
@@ -31,7 +31,7 @@ Le dossier `dist/` est un site statique : il se dépose tel quel sur Netlify, Ve
 | Ouvrir une fiche | clic sur l'œuvre, ou Entrée quand la légende s'affiche | toucher l'œuvre |
 | Fermer | Échap ou bouton × | bouton × |
 
-Le menu « Œuvres » liste les pièces exposées (la caméra s'y rend toute seule) et permet de choisir la qualité du rendu : Haute, Équilibrée ou Légère. Sans choix manuel, la qualité baisse automatiquement si l'appareil peine.
+Le menu « Œuvres » liste les pièces exposées (la caméra s'y rend toute seule) et permet de choisir la qualité du rendu : Haute (effets d'ambiance, par défaut sur ordinateur), Équilibrée (par défaut sur téléphone et tablette) ou Légère (sans reflets au sol). Sans choix manuel, la qualité baisse automatiquement si l'appareil peine ; la netteté de l'image, elle, est conservée.
 
 ## Modifier ou ajouter une œuvre
 
@@ -57,7 +57,7 @@ Tout se passe dans `src/data/artworks.json`, sans toucher au code.
 ```
 
 - `placement.wall` : `terra-ouest`, `terra-nord`, `terra-sud`, `nuit-nord`, `nuit-ouest`, `nuit-est`, `ocre-est`, `ocre-nord` ou `ocre-sud` (définis dans `src/scene/layout.ts`).
-- `price` : prix en euros, affiché sur le panneau de verre, la fiche et le panier.
+- `price` : prix en euros, affiché sur la tablette de verre, la fiche et le panier.
 - `placement.position` : position le long du mur, en mètres ; `height` : hauteur du centre de l'œuvre.
 - `display` doit respecter le rapport largeur / hauteur de l'image pour éviter toute déformation.
 - Le cadre, le cartel, le projecteur et la fiche sont générés automatiquement.
@@ -84,27 +84,32 @@ artin-berry-gallery/
 Fichiers clés de la scène :
 
 - `layout.ts` : plan du bâtiment (dimensions, murs, verrière, mobilier, collisions).
-- `Lighting.tsx` : soleil (ombres), verrière et façade (lumières surfaciques), lumière indirecte.
-- `Artworks.tsx` : cadres, cartels, projecteurs, interactions.
+- `Architecture.tsx` : murs, rotonde, sol en marbre et lumière « peinte » (halos des gorges lumineuses, tache de soleil du hall).
+- `Lighting.tsx` : lumière d'ambiance diffuse, calculée une fois.
+- `textures.ts` : marbre veiné, ombres et nappes de lumière, dessinés au chargement.
+- `Artworks.tsx` : cadres, tablettes de verre, projecteurs, animation d'ajout au panier, interactions.
 - `Player.tsx` + `nav.ts` : déplacement, collisions, recherche de chemin, mouvements de caméra.
 
 ## Choix techniques
 
 - React 19, Vite, Three.js, React Three Fiber, Drei, postprocessing.
-- Matériaux PBR, ombres douces du soleil, occlusion ambiante (N8AO), reflets flous du sol, rendu des tons « neutre » pour ne pas dénaturer les couleurs des œuvres.
-- Les œuvres sont pour moitié éclairées par la scène et pour moitié auto-lumineuses : elles réagissent aux projecteurs sans dérive de couleur. Les fichiers originaux ne sont jamais retouchés.
+- **Netteté** : l'image est calculée à la définition de l'écran (jusqu'à 2,5 fois la définition logique sur téléphone, 2 fois sur ordinateur) avec lissage matériel des contours.
+- **Lumière peinte** : aucune source lumineuse n'est calculée à chaque image. Les nappes des projecteurs, les halos des gorges lumineuses, les ombres portées et la tache de soleil sont peints sur les surfaces ; seule une lumière d'ambiance diffuse est calculée, une fois. La puissance de l'appareil va à la netteté.
+- **Sol** : marbre noir veiné dessiné au chargement (aucun fichier image), poli, avec le reflet de l'architecture et des œuvres.
+- En qualité Haute s'ajoutent l'occlusion ambiante (N8AO) et le halo des sources lumineuses.
+- **Œuvres** : affichées telles quelles, sans éclairage ni correction de tons, donc avec leurs couleurs d'origine. L'œuvre la plus proche du visiteur passe automatiquement sur le fichier original en pleine résolution ; les autres utilisent une version de 1024 px. Les fichiers originaux ne sont jamais retouchés.
 - Aucun serveur, aucune base de données, aucune dépendance en ligne à l'exécution.
 
 ## Panier
 
-Un clic sur le panneau de verre à côté d'une œuvre (ou sur « Ajouter au panier » dans la fiche) ajoute l'œuvre au panier, avec une animation lumineuse. Le panier est conservé dans le navigateur du visiteur. Le paiement en ligne (Stripe) n'est pas encore branché : le bouton de paiement est désactivé.
+Le bouton « Ajouter au panier » de la tablette de verre (ou celui de la fiche) ajoute l'œuvre au panier : deux anneaux de lumière et une traîne d'étincelles s'enroulent autour de la tablette. Un clic ailleurs sur la tablette ouvre la fiche. Le panier est conservé dans le navigateur du visiteur. Le paiement en ligne (Stripe) n'est pas encore branché : le bouton de paiement est désactivé.
 
 ## Limites connues de cette V1
 
 - Les patios végétaux du plan ne sont pas modélisés, et la rotonde n'accueille pas encore d'œuvres (3 emplacements restent libres pour atteindre 15).
 - Les affiches sont montrées agrandies (1,30 × 1,95 m) pour la lisibilité ; le format vendu indiqué est 50 × 70 cm.
 
-- L'éclairage est calculé en temps réel, sans lightmaps précalculées : le rendu est soigné, mais ce n'est pas un rendu photoréaliste hors-ligne.
+- La lumière est peinte et non simulée : le rendu est soigné, mais ce n'est pas un rendu photoréaliste hors-ligne (pas d'ombres portées dynamiques, pas de rebonds de lumière calculés).
 - Le logo fourni mesure 447 px de large. Il est utilisé tel quel ; sur le mur du hall, ses contours restent légèrement doux de très près. Un fichier vectoriel (SVG) donnerait un résultat parfaitement net.
 - Technique et dimensions des œuvres ne sont pas renseignées (non communiquées) : les champs existent et s'affichent dès qu'ils sont remplis. Les descriptions sont des descriptions visuelles, à relire et compléter.
 - La fluidité a été vérifiée fonctionnellement, pas mesurée sur une gamme d'appareils : à tester sur les machines de démonstration.

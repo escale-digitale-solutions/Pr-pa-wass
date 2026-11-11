@@ -1,7 +1,6 @@
 import { PerformanceMonitor } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
-import { Bloom, EffectComposer, N8AO, SMAA, ToneMapping, Vignette } from '@react-three/postprocessing'
-import { ToneMappingMode } from 'postprocessing'
+import { Bloom, EffectComposer, N8AO, SMAA, Vignette } from '@react-three/postprocessing'
 import { Suspense, useEffect, useState } from 'react'
 import { useGallery } from '../store'
 import { Architecture } from './Architecture'
@@ -34,37 +33,45 @@ function Scene() {
   )
 }
 
-/** Post-traitement volontairement discret : occlusion ambiante, halo des sources, rendu des tons. */
+/** Qualité « Haute » : occlusion ambiante et halo des sources lumineuses, en plus du rendu direct. */
 function Effects() {
-  const quality = useGallery((s) => s.quality)
   return (
     <EffectComposer multisampling={0} enableNormalPass={false}>
-      {quality !== 'low' ? (
-        <N8AO
-          aoRadius={0.9}
-          distanceFalloff={0.7}
-          intensity={2.1}
-          aoSamples={quality === 'high' ? 16 : 10}
-          denoiseSamples={quality === 'high' ? 8 : 4}
-          denoiseRadius={10}
-          halfRes={quality !== 'high'}
-          color="#1c140c"
-        />
-      ) : (
-        <></>
-      )}
-      <Bloom mipmapBlur luminanceThreshold={1.15} luminanceSmoothing={0.25} intensity={0.28} radius={0.72} />
-      <ToneMapping mode={ToneMappingMode.NEUTRAL} />
+      <N8AO
+        ref={(pass: { autoDetectTransparency: boolean; configuration: { transparencyAware: boolean } } | null) => {
+          // les halos et ombres « peints » sont des surfaces transparentes : sans ce réglage,
+          // l'occlusion s'interromprait net à leur bord
+          if (!pass) return
+          pass.autoDetectTransparency = false
+          pass.configuration.transparencyAware = false
+        }}
+        aoRadius={0.9}
+        distanceFalloff={0.7}
+        intensity={2}
+        aoSamples={16}
+        denoiseSamples={8}
+        denoiseRadius={10}
+        color="#1c140c"
+      />
+      <Bloom mipmapBlur luminanceThreshold={1.05} luminanceSmoothing={0.2} intensity={0.32} radius={0.72} />
       <SMAA />
-      <Vignette offset={0.22} darkness={0.4} />
+      <Vignette offset={0.22} darkness={0.32} />
     </EffectComposer>
   )
 }
 
+/**
+ * Netteté : l'image est calculée à la résolution de l'écran (jusqu'à 2,5 fois sa définition logique
+ * sur téléphone), avec lissage matériel des contours. Aucune correction de tons : les œuvres
+ * s'affichent avec leurs couleurs d'origine.
+ */
 export function Experience() {
   const quality = useGallery((s) => s.quality)
   const degrade = useGallery((s) => s.degrade)
-  const maxDpr = quality === 'high' ? 1.75 : quality === 'medium' ? 1.35 : 1
+  const isTouch = useGallery((s) => s.isTouch)
+  // la netteté passe avant les effets : même au palier « Légère », un téléphone garde une image fine
+  const cap = isTouch ? (quality === 'medium' ? 2.5 : 2) : quality === 'low' ? 1.5 : 2
+  const dpr = Math.min(window.devicePixelRatio || 1, cap)
   // l'adaptation automatique ne démarre qu'une fois la scène chargée et stabilisée
   const ready = useGallery((s) => s.ready)
   const locked = useGallery((s) => s.qualityLocked)
@@ -77,23 +84,18 @@ export function Experience() {
   return (
     <Canvas
       className="gallery-canvas"
-      shadows="percentage"
-      dpr={[1, maxDpr]}
-      gl={{ antialias: false, powerPreference: 'high-performance', stencil: false }}
-      camera={{ fov: 58, near: 0.08, far: 320, position: [2.3, 1.62, 11.2] }}
-      onCreated={({ gl }) => {
-        gl.toneMappingExposure = 1
-      }}
+      flat
+      dpr={dpr}
+      gl={{ antialias: true, powerPreference: 'high-performance', stencil: false }}
+      camera={{ fov: 58, near: 0.08, far: 320, position: [2.5, 1.62, 11.2] }}
     >
       <color attach="background" args={['#e9e6e0']} />
       <Suspense fallback={null}>
         <Scene />
       </Suspense>
       <Player />
-      <Effects />
-      {monitor && !locked && (
-        <PerformanceMonitor ms={300} iterations={8} threshold={0.7} bounds={() => [32, 120]} onDecline={degrade} />
-      )}
+      {quality === 'high' && <Effects />}
+      {monitor && !locked && <PerformanceMonitor ms={300} iterations={8} threshold={0.7} bounds={() => [30, 120]} onDecline={degrade} />}
     </Canvas>
   )
 }

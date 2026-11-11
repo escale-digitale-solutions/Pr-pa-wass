@@ -29,7 +29,8 @@ export function Help() {
           <div>
             <h3>Découvrir</h3>
             <p>
-              {isTouch ? 'Touchez une œuvre' : 'Cliquez sur une œuvre'} pour ouvrir sa fiche, puis « Observer en grand » pour la voir en détail.
+              {isTouch ? 'Touchez une œuvre' : 'Cliquez sur une œuvre'} pour ouvrir sa fiche, puis « Observer en grand » pour la voir en détail. Sur la
+              tablette de verre, le bouton « Ajouter au panier » l’ajoute à votre panier.
               {isTouch ? '' : ' Échap referme la fiche.'}
             </p>
           </div>

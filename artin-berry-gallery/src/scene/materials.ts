@@ -10,12 +10,13 @@ export interface Materials {
   bronze: THREE.MeshStandardMaterial
   blackMetal: THREE.MeshStandardMaterial
   champagne: THREE.MeshStandardMaterial
+  chrome: THREE.MeshStandardMaterial
+  leather: THREE.MeshStandardMaterial
   oak: THREE.MeshStandardMaterial
   oakFrame: THREE.MeshStandardMaterial
   whiteFrame: THREE.MeshStandardMaterial
   stone: THREE.MeshStandardMaterial
   terrace: THREE.MeshStandardMaterial
-  floorMaps: { map: THREE.Texture; normalMap: THREE.Texture; roughnessMap: THREE.Texture }
 }
 
 const TEX = [
@@ -85,22 +86,8 @@ export function useMaterials(): Materials {
       roughness: 0.95,
       color: '#d9d4ca',
     })
-    return {
-      wall,
-      plinth,
-      bronze,
-      blackMetal,
-      champagne,
-      oak,
-      oakFrame,
-      whiteFrame,
-      stone,
-      terrace,
-      floorMaps: {
-        map: tile(floorDiff, 6.9, 6.3, true, aniso),
-        normalMap: tile(floorNor, 6.9, 6.3, false, aniso),
-        roughnessMap: tile(floorRough, 6.9, 6.3, false, aniso),
-      },
-    }
+    const chrome = new THREE.MeshStandardMaterial({ color: '#8e8c88', roughness: 0.32, metalness: 1 })
+    const leather = new THREE.MeshStandardMaterial({ color: '#7a4a2e', roughness: 0.58, metalness: 0 })
+    return { wall, plinth, bronze, blackMetal, champagne, chrome, leather, oak, oakFrame, whiteFrame, stone, terrace }
   }, [gl, wallNor, oakDiff, oakNor, oakRough, floorDiff, floorNor, floorRough])
 }

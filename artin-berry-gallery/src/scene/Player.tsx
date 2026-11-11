@@ -4,7 +4,7 @@ import * as THREE from 'three'
 import { ARTWORKS, POSES, byId } from '../data/artworks'
 import { joystick, lookStick, useGallery } from '../store'
 import { controller } from './controller'
-import { EYE } from './layout'
+import { EYE, TABLET } from './layout'
 import { type P2, PLAYER_R, findPath, pathLength, resolve } from './nav'
 
 interface Travel {
@@ -19,7 +19,7 @@ interface Travel {
 }
 
 const START = { x: 0, z: 10.9, yaw: 0, pitch: 0.04 }
-const LANDING = { x: 2.3, z: 11.2, yaw: 0.34, pitch: 0.07 }
+const LANDING = { x: 2.5, z: 11.2, yaw: 0.5, pitch: 0.07 }
 const LANDING_NARROW = { x: 0, z: 11.4, yaw: 0, pitch: 0.07 }
 
 const damp = THREE.MathUtils.damp
@@ -111,6 +111,11 @@ export function Player() {
           s.pitch = s.pitchT = pitch
         },
         state: s,
+        // position à l'écran (pixels CSS) d'un point de la scène
+        screen: (x: number, y: number, z: number) => {
+          const v = new THREE.Vector3(x, y, z).project(camera)
+          return [((v.x + 1) / 2) * window.innerWidth, ((1 - v.y) / 2) * window.innerHeight]
+        },
       }
     }
 
@@ -128,10 +133,13 @@ export function Player() {
       const H = window.innerHeight
       const tan = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2))
       const fit = 0.78
+      // on cadre l'ensemble « œuvre + tablette de verre », la tablette étant à droite de l'œuvre
+      const extra = TABLET.gap + TABLET.w + 0.09
       const dV = a.display.height / (2 * tan * fit * (area.h / H))
-      const dH = a.display.width / (2 * tan * camera.aspect * fit * (area.w / W))
+      const dH = (a.display.width + extra) / (2 * tan * camera.aspect * fit * (area.w / W))
       const d = clamp(Math.max(dV, dH, 1.9), 1.9, 7)
-      const goal = { x: p.x + p.nx * d, z: p.z + p.nz * d }
+      const side = (TABLET.gap + TABLET.w) / 2
+      const goal = { x: p.x + p.nz * side + p.nx * d, z: p.z - p.nx * side + p.nz * d }
       resolve(goal, PLAYER_R + 0.02)
       const yaw = Math.atan2(p.nx, p.nz)
       const pitch = Math.atan2(p.y - EYE, d)
