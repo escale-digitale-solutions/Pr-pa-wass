@@ -1,0 +1,290 @@
+[
+  {
+    "id": "klee-burggarten",
+    "title": "Burggarten",
+    "artist": "Paul Klee",
+    "year": "1919",
+    "technique": "",
+    "dimensions": "50 × 70 cm",
+    "note": "Affiche d'art",
+    "description": "Un assemblage de formes géométriques aux couleurs intenses — tours, arches, toits et motifs végétaux — compose un jardin de château imaginaire, construit comme un vitrail.",
+    "image": "artworks/tex/klee-burggarten.jpg",
+    "imageFull": "artworks/full/klee-burggarten.jpg",
+    "room": "Salle Terracotta",
+    "placement": {
+      "wall": "terra-sud",
+      "position": -10.2,
+      "height": 1.68
+    },
+    "display": {
+      "width": 1.3,
+      "height": 1.95
+    },
+    "frame": "oak",
+    "price": 59
+  },
+  {
+    "id": "klee-senecio",
+    "title": "Senecio",
+    "artist": "Paul Klee",
+    "year": "1922",
+    "technique": "",
+    "dimensions": "50 × 70 cm",
+    "note": "Affiche d'art",
+    "description": "Un visage rond, bâti de plans géométriques jaunes, roses et blancs sur un fond orangé. Deux yeux rouges et un sourcil arqué lui donnent une expression énigmatique.",
+    "image": "artworks/tex/klee-senecio.jpg",
+    "imageFull": "artworks/full/klee-senecio.jpg",
+    "room": "Salle Terracotta",
+    "placement": {
+      "wall": "terra-ouest",
+      "position": 2.6,
+      "height": 1.68
+    },
+    "display": {
+      "width": 1.3,
+      "height": 1.95
+    },
+    "frame": "oak",
+    "price": 59
+  },
+  {
+    "id": "klee-old-city",
+    "title": "Old City",
+    "artist": "Paul Klee",
+    "year": "1928",
+    "technique": "",
+    "dimensions": "50 × 70 cm",
+    "note": "Affiche d'art",
+    "description": "Des bandes de couleur — bleu, jaune, rouge, violet — parcourues d'une écriture de traits, d'arches et de triangles qui évoque les façades serrées d'une ville ancienne.",
+    "image": "artworks/tex/klee-old-city.jpg",
+    "imageFull": "artworks/full/klee-old-city.jpg",
+    "room": "Salle Terracotta",
+    "placement": {
+      "wall": "terra-ouest",
+      "position": -2.6,
+      "height": 1.68
+    },
+    "display": {
+      "width": 1.3,
+      "height": 1.95
+    },
+    "frame": "oak",
+    "price": 59
+  },
+  {
+    "id": "klee-blossoming",
+    "title": "Blossoming",
+    "artist": "Paul Klee",
+    "year": "1934",
+    "technique": "",
+    "dimensions": "50 × 70 cm",
+    "note": "Affiche d'art",
+    "description": "Une fleur stylisée, cercle rose porté par une fine tige verte, s'épanouit sur un champ de points multicolores disposés en rangées.",
+    "image": "artworks/tex/klee-blossoming.jpg",
+    "imageFull": "artworks/full/klee-blossoming.jpg",
+    "room": "Salle Terracotta",
+    "placement": {
+      "wall": "terra-nord",
+      "position": -10.2,
+      "height": 1.68
+    },
+    "display": {
+      "width": 1.3,
+      "height": 1.95
+    },
+    "frame": "oak",
+    "price": 59
+  },
+  {
+    "id": "klee-late-evening",
+    "title": "Late Evening — Looking Out of the Woods",
+    "artist": "Paul Klee",
+    "year": "1937",
+    "technique": "",
+    "dimensions": "50 × 70 cm",
+    "note": "Affiche d'art · mention « Saint Louis Art Museum — Modern Art Collection »",
+    "description": "Des formes outremer, cernées de brun sombre, se juxtaposent comme autant de trouées de ciel aperçues entre les branches à la tombée du jour.",
+    "image": "artworks/tex/klee-late-evening.jpg",
+    "imageFull": "artworks/full/klee-late-evening.jpg",
+    "room": "Salle Bleu nuit",
+    "placement": {
+      "wall": "nuit-ouest",
+      "position": -10.2,
+      "height": 1.68
+    },
+    "display": {
+      "width": 1.3,
+      "height": 1.95
+    },
+    "frame": "oak",
+    "price": 59
+  },
+  {
+    "id": "monet-effet-rose",
+    "title": "Effet rose — Les Peupliers",
+    "artist": "Claude Monet",
+    "year": "1891",
+    "technique": "",
+    "dimensions": "50 × 70 cm",
+    "note": "Affiche d'art · mention « Giverny · France »",
+    "description": "Une rangée de peupliers élancés se reflète dans l'eau, dans une lumière rose et bleutée où le ciel et la rivière semblent se confondre.",
+    "image": "artworks/tex/monet-effet-rose.jpg",
+    "imageFull": "artworks/full/monet-effet-rose.jpg",
+    "room": "Salle Bleu nuit",
+    "placement": {
+      "wall": "nuit-nord",
+      "position": -2.6,
+      "height": 1.68
+    },
+    "display": {
+      "width": 1.3,
+      "height": 1.95
+    },
+    "frame": "champagne",
+    "price": 59
+  },
+  {
+    "id": "van-gogh-printemps",
+    "title": "Printemps — Almond Blossom",
+    "artist": "Vincent van Gogh",
+    "year": "1890",
+    "technique": "",
+    "dimensions": "50 × 70 cm",
+    "note": "Affiche d'art · mention « Saint-Rémy-de-Provence »",
+    "description": "Des branches d'amandier en fleurs se déploient sur un ciel turquoise ; les pétales blancs, rehaussés de rose, sont cernés d'un trait net et vigoureux.",
+    "image": "artworks/tex/van-gogh-printemps.jpg",
+    "imageFull": "artworks/full/van-gogh-printemps.jpg",
+    "room": "Salle Bleu nuit",
+    "placement": {
+      "wall": "nuit-nord",
+      "position": 2.6,
+      "height": 1.68
+    },
+    "display": {
+      "width": 1.3,
+      "height": 1.95
+    },
+    "frame": "champagne",
+    "price": 59
+  },
+  {
+    "id": "monet-giverny",
+    "title": "Giverny — Water Lilies and Japanese Bridge",
+    "artist": "Claude Monet",
+    "year": "1899",
+    "technique": "",
+    "dimensions": "50 × 70 cm",
+    "note": "Affiche d'art · mention « Impressionnisme français »",
+    "description": "Un pont de bois arqué enjambe un bassin couvert de nymphéas, au cœur d'une végétation dense traitée en touches vertes et bleues.",
+    "image": "artworks/tex/monet-giverny.jpg",
+    "imageFull": "artworks/full/monet-giverny.jpg",
+    "room": "Salle Bleu nuit",
+    "placement": {
+      "wall": "nuit-est",
+      "position": -10.2,
+      "height": 1.68
+    },
+    "display": {
+      "width": 1.3,
+      "height": 1.95
+    },
+    "frame": "champagne",
+    "price": 59
+  },
+  {
+    "id": "klee-may-picture",
+    "title": "May Picture",
+    "artist": "Paul Klee",
+    "year": "1925",
+    "technique": "",
+    "dimensions": "50 × 70 cm",
+    "note": "Affiche d'art",
+    "description": "Une mosaïque de touches colorées, serrées comme les tesselles d'un pavement, où des verts tendres et des rouges vifs affleurent parmi des tons plus sourds. La composition repose entièrement sur le rythme de la couleur.",
+    "image": "artworks/tex/klee-may-picture.jpg",
+    "imageFull": "artworks/full/klee-may-picture.jpg",
+    "room": "Salle Ocre",
+    "placement": {
+      "wall": "ocre-nord",
+      "position": 10.2,
+      "height": 1.68
+    },
+    "display": {
+      "width": 1.3,
+      "height": 1.95
+    },
+    "frame": "oak",
+    "price": 59
+  },
+  {
+    "id": "matisse-open-window-collioure",
+    "title": "Open Window, Collioure",
+    "artist": "Henri Matisse",
+    "year": "1905",
+    "technique": "",
+    "dimensions": "50 × 70 cm",
+    "note": "Affiche d'art",
+    "description": "Une fenêtre grande ouverte sur un port : barques aux mâts orangés, pots de fleurs sur le rebord, murs roses et turquoise. La couleur pure, posée en touches franches, construit à elle seule l'espace et la lumière.",
+    "image": "artworks/tex/matisse-open-window-collioure.jpg",
+    "imageFull": "artworks/full/matisse-open-window-collioure.jpg",
+    "room": "Salle Ocre",
+    "placement": {
+      "wall": "ocre-est",
+      "position": -2.6,
+      "height": 1.68
+    },
+    "display": {
+      "width": 1.3,
+      "height": 1.95
+    },
+    "frame": "black",
+    "price": 59
+  },
+  {
+    "id": "matisse-paysage-marocain",
+    "title": "Paysage marocain",
+    "artist": "Henri Matisse",
+    "year": "1912",
+    "technique": "",
+    "dimensions": "50 × 70 cm",
+    "note": "Affiche d'art",
+    "description": "Un jardin luxuriant baigné de mauve et de bleu : troncs violets, feuillages d'un vert profond et grandes feuilles découpées au premier plan.",
+    "image": "artworks/tex/matisse-paysage-marocain.jpg",
+    "imageFull": "artworks/full/matisse-paysage-marocain.jpg",
+    "room": "Salle Ocre",
+    "placement": {
+      "wall": "ocre-est",
+      "position": 2.6,
+      "height": 1.68
+    },
+    "display": {
+      "width": 1.3,
+      "height": 1.95
+    },
+    "frame": "black",
+    "price": 59
+  },
+  {
+    "id": "matisse-seated-riffian",
+    "title": "Seated Riffian",
+    "artist": "Henri Matisse",
+    "year": "1912",
+    "technique": "",
+    "dimensions": "50 × 70 cm",
+    "note": "Affiche d'art · mention « Morocco »",
+    "description": "Un homme assis de face, drapé dans un ample vêtement vert brodé de pompons, se détache sur de larges aplats jaunes, bleus et verts au-dessus d'un sol rouge.",
+    "image": "artworks/tex/matisse-seated-riffian.jpg",
+    "imageFull": "artworks/full/matisse-seated-riffian.jpg",
+    "room": "Salle Ocre",
+    "placement": {
+      "wall": "ocre-sud",
+      "position": 10.2,
+      "height": 1.68
+    },
+    "display": {
+      "width": 1.3,
+      "height": 1.95
+    },
+    "frame": "black",
+    "price": 59
+  }
+]
