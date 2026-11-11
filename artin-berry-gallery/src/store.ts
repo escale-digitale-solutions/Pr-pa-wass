@@ -6,6 +6,11 @@ export type Quality = 'high' | 'medium' | 'low'
 const params = new URLSearchParams(window.location.search)
 const forced = params.get('quality') as Quality | null
 const isTouch = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches
+// Android indique la mémoire de l'appareil : en dessous de 4 Go, on démarre au palier le plus léger
+const lowMemory = ((navigator as unknown as { deviceMemory?: number }).deviceMemory ?? 8) < 4
+
+/** Écran étroit tenu à la verticale : la fiche et la plaque d'accueil s'affichent en bas, sur toute la largeur. */
+export const sheetLayout = (w = window.innerWidth, h = window.innerHeight) => w < 860 && h >= w
 
 interface GalleryState {
   phase: Phase
@@ -22,6 +27,8 @@ interface GalleryState {
   veil: boolean
   hintShown: boolean
   quality: Quality
+  /** dernier palier automatique : définition d'image réduite, pour les appareils les plus modestes */
+  saver: boolean
   qualityLocked: boolean
   isTouch: boolean
   setReady: () => void
@@ -95,7 +102,8 @@ export const useGallery = create<GalleryState>((set, get) => ({
   helpOpen: false,
   veil: false,
   hintShown: false,
-  quality: forced && ['high', 'medium', 'low'].includes(forced) ? forced : isTouch ? 'medium' : 'high',
+  quality: forced && ['high', 'medium', 'low'].includes(forced) ? forced : lowMemory ? 'low' : isTouch ? 'medium' : 'high',
+  saver: false,
   qualityLocked: !!forced,
   isTouch,
   setReady: () => set({ ready: true }),
@@ -116,9 +124,10 @@ export const useGallery = create<GalleryState>((set, get) => ({
     if (qualityLocked) return
     if (quality === 'high') set({ quality: 'medium' })
     else if (quality === 'medium') set({ quality: 'low' })
+    else set({ saver: true })
   },
   // choix manuel : désactive l'adaptation automatique
-  setQuality: (q) => set({ quality: q, qualityLocked: true }),
+  setQuality: (q) => set({ quality: q, qualityLocked: true, saver: false }),
 }))
 
 /** Manette tactile : valeurs lues à chaque image par le contrôleur de déplacement. */

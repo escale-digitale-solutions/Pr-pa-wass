@@ -83,7 +83,7 @@ export function Hud() {
               </svg>
             </button>
           )}
-          <button className="icon-btn" onClick={goHome} aria-label="Retour à l'accueil" title="Accueil" tabIndex={visiting ? 0 : -1}>
+          <button className="icon-btn hud__home" onClick={goHome} aria-label="Retour à l'accueil" title="Accueil" tabIndex={visiting ? 0 : -1}>
             <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden>
               <path d="M2 7.5L8 2l6 5.5M3.8 6.5V14h8.4V6.5" fill="none" stroke="currentColor" strokeWidth="1.1" />
             </svg>

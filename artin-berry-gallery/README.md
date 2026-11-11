@@ -47,7 +47,7 @@ Tout se passe dans `src/data/artworks.json`, sans toucher au code.
   "dimensions": "",               // facultatif : vide = non affiché
   "note": "Affiche d'art",        // facultatif
   "description": "…",             // facultatif
-  "image": "artworks/tex/klee-senecio.jpg",       // texture de la scène 3D
+  "image": "artworks/tex/klee-senecio.webp",      // version légère pour la scène 3D
   "imageFull": "artworks/full/klee-senecio.jpg",  // original, pour la visionneuse
   "room": "Grande galerie",
   "placement": { "wall": "galerie-ouest", "position": -8.9, "height": 1.62 },
@@ -62,7 +62,7 @@ Tout se passe dans `src/data/artworks.json`, sans toucher au code.
 - `display` doit respecter le rapport largeur / hauteur de l'image pour éviter toute déformation.
 - Le cadre, le cartel, le projecteur et la fiche sont générés automatiquement.
 
-Pour préparer de nouvelles images (copie de l'original + texture 1024 px) : placer les fichiers dans `public/artworks/full`, puis créer la version réduite dans `public/artworks/tex` — le script `scripts/prepare_assets.py` montre la marche à suivre (Python + Pillow).
+Pour préparer de nouvelles images (copie de l'original + version légère WebP de 720 px) : placer les fichiers dans `public/artworks/full`, puis créer la version réduite dans `public/artworks/tex` — le script `scripts/prepare_assets.py` montre la marche à suivre (Python + Pillow).
 
 ## Organisation
 
@@ -97,8 +97,14 @@ Fichiers clés de la scène :
 - **Lumière peinte** : aucune source lumineuse n'est calculée à chaque image. Les nappes des projecteurs, les halos des gorges lumineuses, les ombres portées et la tache de soleil sont peints sur les surfaces ; seule une lumière d'ambiance diffuse est calculée, une fois. La puissance de l'appareil va à la netteté.
 - **Sol** : marbre noir veiné dessiné au chargement (aucun fichier image), poli, avec le reflet de l'architecture et des œuvres.
 - En qualité Haute s'ajoutent l'occlusion ambiante (N8AO) et le halo des sources lumineuses.
-- **Œuvres** : affichées telles quelles, sans éclairage ni correction de tons, donc avec leurs couleurs d'origine. L'œuvre la plus proche du visiteur passe automatiquement sur le fichier original en pleine résolution ; les autres utilisent une version de 1024 px. Les fichiers originaux ne sont jamais retouchés.
+- **Œuvres** : affichées telles quelles, sans éclairage ni correction de tons, donc avec leurs couleurs d'origine. L'œuvre la plus proche du visiteur passe automatiquement sur le fichier original en pleine résolution ; les autres utilisent une version légère (WebP, 720 px), pour un chargement rapide sur téléphone. Les fichiers originaux ne sont jamais retouchés.
 - Aucun serveur, aucune base de données, aucune dépendance en ligne à l'exécution.
+
+## Téléphones et tablettes
+
+- **Chargement** : environ 3 Mo au démarrage (images légères en WebP, textures réduites, effets d'ambiance non téléchargés sur mobile). Les originaux ne se chargent qu'à l'approche d'une œuvre.
+- **Écrans** : mise en page adaptée au téléphone vertical (fiche et accueil en bas), au téléphone horizontal et à la tablette (fiche sur le côté), avec prise en compte des encoches.
+- **Fluidité** : si l'appareil peine, la galerie retire d'abord les reflets du sol, puis réduit la définition de l'image. Sur Android, les appareils de moins de 4 Go de mémoire démarrent directement au palier léger.
 
 ## Panier
 
@@ -116,7 +122,7 @@ Le bouton « Ajouter au panier » de la tablette de verre (ou celui de la fiche)
 
 ## Crédits
 
-- Textures de sol, d'enduit et de chêne : [Poly Haven](https://polyhaven.com) (licence CC0).
+- Textures d'enduit et de chêne : [Poly Haven](https://polyhaven.com) (licence CC0).
 - Polices : Cormorant Garamond et Jost (licence SIL Open Font).
 
 ## Publication sur GitHub Pages

@@ -8,7 +8,7 @@
     "dimensions": "50 × 70 cm",
     "note": "Affiche d'art",
     "description": "Un assemblage de formes géométriques aux couleurs intenses — tours, arches, toits et motifs végétaux — compose un jardin de château imaginaire, construit comme un vitrail.",
-    "image": "artworks/tex/klee-burggarten.jpg",
+    "image": "artworks/tex/klee-burggarten.webp",
     "imageFull": "artworks/full/klee-burggarten.jpg",
     "room": "Salle Terracotta",
     "placement": {
@@ -32,7 +32,7 @@
     "dimensions": "50 × 70 cm",
     "note": "Affiche d'art",
     "description": "Un visage rond, bâti de plans géométriques jaunes, roses et blancs sur un fond orangé. Deux yeux rouges et un sourcil arqué lui donnent une expression énigmatique.",
-    "image": "artworks/tex/klee-senecio.jpg",
+    "image": "artworks/tex/klee-senecio.webp",
     "imageFull": "artworks/full/klee-senecio.jpg",
     "room": "Salle Terracotta",
     "placement": {
@@ -56,7 +56,7 @@
     "dimensions": "50 × 70 cm",
     "note": "Affiche d'art",
     "description": "Des bandes de couleur — bleu, jaune, rouge, violet — parcourues d'une écriture de traits, d'arches et de triangles qui évoque les façades serrées d'une ville ancienne.",
-    "image": "artworks/tex/klee-old-city.jpg",
+    "image": "artworks/tex/klee-old-city.webp",
     "imageFull": "artworks/full/klee-old-city.jpg",
     "room": "Salle Terracotta",
     "placement": {
@@ -80,7 +80,7 @@
     "dimensions": "50 × 70 cm",
     "note": "Affiche d'art",
     "description": "Une fleur stylisée, cercle rose porté par une fine tige verte, s'épanouit sur un champ de points multicolores disposés en rangées.",
-    "image": "artworks/tex/klee-blossoming.jpg",
+    "image": "artworks/tex/klee-blossoming.webp",
     "imageFull": "artworks/full/klee-blossoming.jpg",
     "room": "Salle Terracotta",
     "placement": {
@@ -104,7 +104,7 @@
     "dimensions": "50 × 70 cm",
     "note": "Affiche d'art · mention « Saint Louis Art Museum — Modern Art Collection »",
     "description": "Des formes outremer, cernées de brun sombre, se juxtaposent comme autant de trouées de ciel aperçues entre les branches à la tombée du jour.",
-    "image": "artworks/tex/klee-late-evening.jpg",
+    "image": "artworks/tex/klee-late-evening.webp",
     "imageFull": "artworks/full/klee-late-evening.jpg",
     "room": "Salle Bleu nuit",
     "placement": {
@@ -128,7 +128,7 @@
     "dimensions": "50 × 70 cm",
     "note": "Affiche d'art · mention « Giverny · France »",
     "description": "Une rangée de peupliers élancés se reflète dans l'eau, dans une lumière rose et bleutée où le ciel et la rivière semblent se confondre.",
-    "image": "artworks/tex/monet-effet-rose.jpg",
+    "image": "artworks/tex/monet-effet-rose.webp",
     "imageFull": "artworks/full/monet-effet-rose.jpg",
     "room": "Salle Bleu nuit",
     "placement": {
@@ -152,7 +152,7 @@
     "dimensions": "50 × 70 cm",
     "note": "Affiche d'art · mention « Saint-Rémy-de-Provence »",
     "description": "Des branches d'amandier en fleurs se déploient sur un ciel turquoise ; les pétales blancs, rehaussés de rose, sont cernés d'un trait net et vigoureux.",
-    "image": "artworks/tex/van-gogh-printemps.jpg",
+    "image": "artworks/tex/van-gogh-printemps.webp",
     "imageFull": "artworks/full/van-gogh-printemps.jpg",
     "room": "Salle Bleu nuit",
     "placement": {
@@ -176,7 +176,7 @@
     "dimensions": "50 × 70 cm",
     "note": "Affiche d'art · mention « Impressionnisme français »",
     "description": "Un pont de bois arqué enjambe un bassin couvert de nymphéas, au cœur d'une végétation dense traitée en touches vertes et bleues.",
-    "image": "artworks/tex/monet-giverny.jpg",
+    "image": "artworks/tex/monet-giverny.webp",
     "imageFull": "artworks/full/monet-giverny.jpg",
     "room": "Salle Bleu nuit",
     "placement": {
@@ -200,7 +200,7 @@
     "dimensions": "50 × 70 cm",
     "note": "Affiche d'art",
     "description": "Une mosaïque de touches colorées, serrées comme les tesselles d'un pavement, où des verts tendres et des rouges vifs affleurent parmi des tons plus sourds. La composition repose entièrement sur le rythme de la couleur.",
-    "image": "artworks/tex/klee-may-picture.jpg",
+    "image": "artworks/tex/klee-may-picture.webp",
     "imageFull": "artworks/full/klee-may-picture.jpg",
     "room": "Salle Ocre",
     "placement": {
@@ -224,7 +224,7 @@
     "dimensions": "50 × 70 cm",
     "note": "Affiche d'art",
     "description": "Une fenêtre grande ouverte sur un port : barques aux mâts orangés, pots de fleurs sur le rebord, murs roses et turquoise. La couleur pure, posée en touches franches, construit à elle seule l'espace et la lumière.",
-    "image": "artworks/tex/matisse-open-window-collioure.jpg",
+    "image": "artworks/tex/matisse-open-window-collioure.webp",
     "imageFull": "artworks/full/matisse-open-window-collioure.jpg",
     "room": "Salle Ocre",
     "placement": {
@@ -248,7 +248,7 @@
     "dimensions": "50 × 70 cm",
     "note": "Affiche d'art",
     "description": "Un jardin luxuriant baigné de mauve et de bleu : troncs violets, feuillages d'un vert profond et grandes feuilles découpées au premier plan.",
-    "image": "artworks/tex/matisse-paysage-marocain.jpg",
+    "image": "artworks/tex/matisse-paysage-marocain.webp",
     "imageFull": "artworks/full/matisse-paysage-marocain.jpg",
     "room": "Salle Ocre",
     "placement": {
@@ -272,7 +272,7 @@
     "dimensions": "50 × 70 cm",
     "note": "Affiche d'art · mention « Morocco »",
     "description": "Un homme assis de face, drapé dans un ample vêtement vert brodé de pompons, se détache sur de larges aplats jaunes, bleus et verts au-dessus d'un sol rouge.",
-    "image": "artworks/tex/matisse-seated-riffian.jpg",
+    "image": "artworks/tex/matisse-seated-riffian.webp",
     "imageFull": "artworks/full/matisse-seated-riffian.jpg",
     "room": "Salle Ocre",
     "placement": {
