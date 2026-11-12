@@ -1,7 +1,6 @@
 import { PerformanceMonitor } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
-import { Bloom, EffectComposer, N8AO, SMAA, Vignette } from '@react-three/postprocessing'
-import { Suspense, useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { useGallery } from '../store'
 import { Architecture } from './Architecture'
 import { Artworks } from './Artworks'
@@ -9,6 +8,11 @@ import { Furniture } from './Furniture'
 import { Lighting } from './Lighting'
 import { useMaterials } from './materials'
 import { Player } from './Player'
+import { preloadSceneTextures } from './assets'
+
+const Effects = lazy(() => import('./Effects'))
+// Démarre les trois groupes ensemble, avant les suspensions des composants.
+preloadSceneTextures()
 
 function Ready() {
   const setReady = useGallery((s) => s.setReady)
@@ -30,33 +34,6 @@ function Scene() {
       <Artworks mats={mats} />
       <Ready />
     </>
-  )
-}
-
-/** Qualité « Haute » : occlusion ambiante et halo des sources lumineuses, en plus du rendu direct. */
-function Effects() {
-  return (
-    <EffectComposer multisampling={0} enableNormalPass={false}>
-      <N8AO
-        ref={(pass: { autoDetectTransparency: boolean; configuration: { transparencyAware: boolean } } | null) => {
-          // les halos et ombres « peints » sont des surfaces transparentes : sans ce réglage,
-          // l'occlusion s'interromprait net à leur bord
-          if (!pass) return
-          pass.autoDetectTransparency = false
-          pass.configuration.transparencyAware = false
-        }}
-        aoRadius={0.9}
-        distanceFalloff={0.7}
-        intensity={2}
-        aoSamples={16}
-        denoiseSamples={8}
-        denoiseRadius={10}
-        color="#1c140c"
-      />
-      <Bloom mipmapBlur luminanceThreshold={1.05} luminanceSmoothing={0.2} intensity={0.32} radius={0.72} />
-      <SMAA />
-      <Vignette offset={0.22} darkness={0.32} />
-    </EffectComposer>
   )
 }
 
@@ -94,7 +71,11 @@ export function Experience() {
         <Scene />
       </Suspense>
       <Player />
-      {quality === 'high' && <Effects />}
+      {ready && quality === 'high' && (
+        <Suspense fallback={null}>
+          <Effects />
+        </Suspense>
+      )}
       {monitor && !locked && <PerformanceMonitor ms={300} iterations={8} threshold={0.7} bounds={() => [30, 120]} onDecline={degrade} />}
     </Canvas>
   )

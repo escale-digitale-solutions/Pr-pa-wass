@@ -2,7 +2,7 @@ import { useTexture } from '@react-three/drei'
 import { useThree } from '@react-three/fiber'
 import { useMemo } from 'react'
 import * as THREE from 'three'
-import { asset } from '../data/artworks'
+import { MATERIAL_TEXTURES } from './assets'
 
 export interface Materials {
   wall: THREE.MeshStandardMaterial
@@ -19,16 +19,6 @@ export interface Materials {
   terrace: THREE.MeshStandardMaterial
 }
 
-const TEX = [
-  'textures/wall_nor.jpg',
-  'textures/oak_diff.jpg',
-  'textures/oak_nor.jpg',
-  'textures/oak_rough.jpg',
-  'textures/floor_diff.jpg',
-  'textures/floor_nor.jpg',
-  'textures/floor_rough.jpg',
-].map(asset)
-
 function tile(t: THREE.Texture, rx: number, ry: number, srgb = false, aniso = 8) {
   const c = t.clone()
   c.wrapS = c.wrapT = THREE.RepeatWrapping
@@ -42,7 +32,7 @@ function tile(t: THREE.Texture, rx: number, ry: number, srgb = false, aniso = 8)
 /** Matériaux PBR partagés par toute la scène. */
 export function useMaterials(): Materials {
   const gl = useThree((s) => s.gl)
-  const [wallNor, oakDiff, oakNor, oakRough, floorDiff, floorNor, floorRough] = useTexture(TEX)
+  const [wallNor, oakDiff, oakNor, oakRough, floorDiff, floorNor, floorRough] = useTexture(MATERIAL_TEXTURES)
   return useMemo(() => {
     const aniso = Math.min(16, gl.capabilities.getMaxAnisotropy())
     const wall = new THREE.MeshStandardMaterial({

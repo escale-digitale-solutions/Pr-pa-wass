@@ -47,7 +47,8 @@ Tout se passe dans `src/data/artworks.json`, sans toucher au code.
   "dimensions": "",               // facultatif : vide = non affiché
   "note": "Affiche d'art",        // facultatif
   "description": "…",             // facultatif
-  "image": "artworks/tex/klee-senecio.jpg",       // texture de la scène 3D
+  "image": "artworks/tex/klee-senecio.jpg",       // texture détaillée de la scène 3D
+  "imagePreview": "artworks/preview/klee-senecio.jpg", // facultatif : aperçu léger de démarrage
   "imageFull": "artworks/full/klee-senecio.jpg",  // original, pour la visionneuse
   "room": "Grande galerie",
   "placement": { "wall": "galerie-ouest", "position": -8.9, "height": 1.62 },
@@ -64,13 +65,21 @@ Tout se passe dans `src/data/artworks.json`, sans toucher au code.
 
 Pour préparer de nouvelles images (copie de l'original + texture 1024 px) : placer les fichiers dans `public/artworks/full`, puis créer la version réduite dans `public/artworks/tex` — le script `scripts/prepare_assets.py` montre la marche à suivre (Python + Pillow).
 
+Pour régénérer uniquement les aperçus de démarrage depuis les textures existantes (Python + Pillow) :
+
+```bash
+python3 scripts/prepare_previews.py
+```
+
+Ce script lit `image` et écrit `imagePreview` pour chaque œuvre de `artworks.json`. Il ne touche ni à `public/artworks/full`, ni au logo, ni aux textures détaillées. Une œuvre sans `imagePreview` utilise directement sa texture habituelle.
+
 ## Organisation
 
 ```
 artin-berry-gallery/
 ├── public/
 │   ├── logo/        logo officiel (original) + versions détourées dérivées
-│   ├── artworks/    full/ = originaux · tex/ = textures de la scène
+│   ├── artworks/    full/ = originaux · tex/ = textures détaillées · preview/ = aperçus
 │   └── textures/    pierre du sol, enduit des murs, chêne
 ├── scripts/         préparation des images
 └── src/
@@ -97,7 +106,8 @@ Fichiers clés de la scène :
 - **Lumière peinte** : aucune source lumineuse n'est calculée à chaque image. Les nappes des projecteurs, les halos des gorges lumineuses, les ombres portées et la tache de soleil sont peints sur les surfaces ; seule une lumière d'ambiance diffuse est calculée, une fois. La puissance de l'appareil va à la netteté.
 - **Sol** : marbre noir veiné dessiné au chargement (aucun fichier image), poli, avec le reflet de l'architecture et des œuvres.
 - En qualité Haute s'ajoutent l'occlusion ambiante (N8AO) et le halo des sources lumineuses.
-- **Œuvres** : affichées telles quelles, sans éclairage ni correction de tons, donc avec leurs couleurs d'origine. L'œuvre la plus proche du visiteur passe automatiquement sur le fichier original en pleine résolution ; les autres utilisent une version de 1024 px. Les fichiers originaux ne sont jamais retouchés.
+- **Œuvres** : sans éclairage ni correction de tons. Au démarrage, les 12 aperçus de 512 px représentent environ 1,2 Mo, contre 5,5 Mo pour les textures de 1024 px. À moins de 8 m (ou à l'ouverture d'une fiche), la texture détaillée est chargée sans bloquer la visite ; l'œuvre la plus proche passe ensuite sur le fichier original en pleine résolution si la carte graphique le permet. Les textures détaillées sont libérées lorsque le visiteur s'éloigne. Les fichiers originaux et les textures de 1024 px ne sont jamais retouchés.
+- **Chargement** : matériaux, logo mural et aperçus sont demandés en parallèle. Le menu ne télécharge aucune vignette avant sa première ouverture ; il réutilise ensuite les aperçus. Les effets de qualité Haute sont téléchargés séparément après l'ouverture de la galerie, uniquement lorsque ce niveau est actif.
 - Aucun serveur, aucune base de données, aucune dépendance en ligne à l'exécution.
 
 ## Panier

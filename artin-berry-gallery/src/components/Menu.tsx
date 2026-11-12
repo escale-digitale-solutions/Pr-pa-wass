@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { ARTWORKS, asset } from '../data/artworks'
 import { useGallery } from '../store'
 import { CloseIcon } from './Help'
@@ -5,6 +6,10 @@ import { CloseIcon } from './Help'
 /** Menu : index des œuvres exposées et retour à l'accueil. */
 export function Menu() {
   const open = useGallery((s) => s.menuOpen)
+  const [hasOpened, setHasOpened] = useState(false)
+  useEffect(() => {
+    if (open) setHasOpened(true)
+  }, [open])
   const quality = useGallery((s) => s.quality)
   const { setMenu, select, goHome, setHelp, setQuality } = useGallery.getState()
   const rooms = Array.from(new Set(ARTWORKS.map((a) => a.room ?? 'Galerie')))
@@ -25,7 +30,7 @@ export function Menu() {
                 {ARTWORKS.filter((a) => (a.room ?? 'Galerie') === room).map((a) => (
                   <li key={a.id}>
                     <button onClick={() => select(a.id)} tabIndex={open ? 0 : -1}>
-                      <img src={asset(a.image)} alt="" loading="lazy" />
+                      <img src={open || hasOpened ? asset(a.imagePreview ?? a.image) : undefined} crossOrigin="anonymous" alt="" loading="lazy" />
                       <span>
                         <em>{a.title}</em>
                         <small>
