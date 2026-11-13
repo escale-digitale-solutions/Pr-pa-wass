@@ -1,7 +1,7 @@
 import { RoundedBox, useTexture } from '@react-three/drei'
 import { useMemo } from 'react'
 import * as THREE from 'three'
-import { asset } from '../data/artworks'
+import { LOGO_TEXTURES } from './assets'
 import { BENCHES, DESK, HALL, OTTOMAN } from './layout'
 import type { Materials } from './materials'
 import { poolTexture, softRectTexture } from './textures'
@@ -87,7 +87,7 @@ function Desk({ mats }: { mats: Materials }) {
 
 /** Logo officiel Artin Berry appliqué sur le mur du hall, éclairé par un projecteur. */
 function LogoWall() {
-  const [mask, shadow] = useTexture([asset('logo/artin-berry-logo-mask.png'), asset('logo/artin-berry-logo-shadow.png')])
+  const [mask, shadow] = useTexture(LOGO_TEXTURES)
   useMemo(() => {
     for (const t of [mask, shadow]) {
       t.anisotropy = 16

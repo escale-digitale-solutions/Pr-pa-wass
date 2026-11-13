@@ -112,7 +112,7 @@ export function Lightbox() {
       {a && open && (
         <>
           <div className="lightbox__stage" ref={stage}>
-            <img ref={img} src={asset(a.imageFull ?? a.image)} alt={a.title} draggable={false} onLoad={apply} />
+            <img ref={img} src={asset(useGallery.getState().isTouch ? a.image : a.imageFull ?? a.image)} alt={a.title} draggable={false} onLoad={apply} />
           </div>
           <div className="lightbox__bar">
             <p>

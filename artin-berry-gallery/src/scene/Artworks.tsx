@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { ARTWORKS, type Artwork, POSES, asset, formatPrice } from '../data/artworks'
 import { useGallery } from '../store'
+import { ARTWORK_PREVIEWS } from './assets'
 import { TABLET, wallColorAt } from './layout'
 import type { Materials } from './materials'
 import { frameInnerShadowTexture, poolTexture, rrect, softRectTexture } from './textures'
@@ -197,7 +198,7 @@ function usePanelTexture(a: Artwork, inCart: boolean, hi: boolean) {
     let alive = true
     // une texture par résolution : on ne redimensionne jamais une texture déjà envoyée à la carte graphique
     const c = document.createElement('canvas')
-    const k = hi ? 2 : 1
+    const k = hi && !useGallery.getState().isTouch ? 2 : 1
     c.width = PW * k
     c.height = PH * k
     const t = new THREE.CanvasTexture(c)
@@ -225,18 +226,18 @@ function usePanelTexture(a: Artwork, inCart: boolean, hi: boolean) {
   return tex
 }
 
-/** Image d'origine, chargée seulement quand le visiteur est devant l'œuvre, libérée ensuite. */
-function useOriginal(a: Artwork, active: boolean) {
+/** Image détaillée chargée à l'approche, sans suspendre la scène ; libérée au départ. */
+function useArtworkTexture(path: string | undefined, active: boolean) {
   const gl = useThree((s) => s.gl)
   const [tex, setTex] = useState<THREE.Texture | null>(null)
   useEffect(() => {
-    if (!active || !a.imageFull || gl.capabilities.maxTextureSize < 4096) return
+    if (!active || !path) return
     let alive = true
     let loaded: THREE.Texture | null = null
     const timer = window.setTimeout(() => {
       const img = new Image()
       img.decoding = 'async'
-      img.src = asset(a.imageFull!)
+      img.src = asset(path)
       img
         .decode()
         .then(() => {
@@ -257,7 +258,7 @@ function useOriginal(a: Artwork, active: boolean) {
       const old = loaded
       if (old) window.setTimeout(() => old.dispose(), 800)
     }
-  }, [a, active, gl])
+  }, [path, active, gl])
   return tex
 }
 
@@ -437,7 +438,7 @@ interface Shared {
   standoff: THREE.BufferGeometry
 }
 
-function ArtworkPiece({ a, texture, mats, shared, hi }: { a: Artwork; texture: THREE.Texture; mats: Materials; shared: Shared; hi: boolean }) {
+function ArtworkPiece({ a, texture, mats, shared, hi, detail }: { a: Artwork; texture: THREE.Texture; mats: Materials; shared: Shared; hi: boolean; detail: boolean }) {
   const pose = POSES[a.id]
   const spec = FRAME_SPEC[a.frame ?? 'oak']
   const { width: w, height: h } = a.display
@@ -445,8 +446,9 @@ function ArtworkPiece({ a, texture, mats, shared, hi }: { a: Artwork; texture: T
   const frameMat = a.frame === 'black' ? mats.blackMetal : a.frame === 'champagne' ? mats.champagne : a.frame === 'white' ? mats.whiteFrame : mats.oakFrame
   const inCart = useGallery((s) => !!s.cart[a.id])
   const panel = usePanelTexture(a, inCart, hi)
-  const original = useOriginal(a, hi)
   const gl = useThree((s) => s.gl)
+  const detailed = useArtworkTexture(a.imagePreview ? a.image : undefined, detail)
+  const original = useArtworkTexture(a.imageFull, hi && !useGallery.getState().isTouch && gl.capabilities.maxTextureSize >= 4096)
   // la nappe du projecteur éclaire le mur : elle prend donc sa couleur
   const poolColor = useMemo(() => new THREE.Color(wallColorAt(pose.x + pose.nx * 0.3, pose.z + pose.nz * 0.3) ?? '#f2efe9').multiplyScalar(0.58), [pose])
 
@@ -499,7 +501,7 @@ function ArtworkPiece({ a, texture, mats, shared, hi }: { a: Artwork; texture: T
         {/* l'image est affichée telle quelle, sans éclairage ni retouche : couleurs et netteté d'origine */}
         <mesh position={[0, 0, spec.depth - 0.022]}>
           <planeGeometry args={[w + 0.01, h + 0.01]} />
-          <meshBasicMaterial map={original ?? texture} toneMapped={false} />
+          <meshBasicMaterial map={original ?? detailed ?? texture} toneMapped={false} />
         </mesh>
         <mesh position={[0, 0, spec.depth - 0.021]} renderOrder={3}>
           <planeGeometry args={[w + 0.01, h + 0.01]} />
@@ -562,7 +564,7 @@ function ArtSpot({ a, mats }: { a: Artwork; mats: Materials }) {
 
 export function Artworks({ mats }: { mats: Materials }) {
   const gl = useThree((s) => s.gl)
-  const textures = useTexture(ARTWORKS.map((a) => asset(a.image)))
+  const textures = useTexture(ARTWORK_PREVIEWS)
   useMemo(() => {
     const aniso = Math.min(16, gl.capabilities.getMaxAnisotropy())
     for (const t of textures) {
@@ -585,16 +587,24 @@ export function Artworks({ mats }: { mats: Materials }) {
 
   // œuvre la plus proche (ou celle dont la fiche est ouverte) : elle passe en pleine résolution
   const [hiId, setHiId] = useState<string | null>(null)
+  const [detailIds, setDetailIds] = useState<string[]>([])
   const timer = useRef(0)
   useFrame((state, dt) => {
     timer.current -= dt
     if (timer.current > 0) return
     timer.current = 0.25
     const st = useGallery.getState()
+    const cam = state.camera.position
+    const nearby = st.phase === 'visiting'
+      ? ARTWORKS.filter((a) => {
+          const p = POSES[a.id]
+          return a.id === st.selectedId || Math.hypot(cam.x - p.x, cam.z - p.z) < 8
+        }).map((a) => a.id)
+      : []
+    setDetailIds((prev) => prev.length === nearby.length && prev.every((id, i) => id === nearby[i]) ? prev : nearby)
     let best: string | null = st.selectedId
-    if (!best) {
+    if (!best && st.phase === 'visiting') {
       let bestD = HIRES_DISTANCE
-      const cam = state.camera.position
       for (const a of ARTWORKS) {
         const p = POSES[a.id]
         const dx = cam.x - p.x
@@ -614,7 +624,7 @@ export function Artworks({ mats }: { mats: Materials }) {
     <group>
       {ARTWORKS.map((a, i) => (
         <group key={a.id}>
-          <ArtworkPiece a={a} texture={textures[i]} mats={mats} shared={shared} hi={hiId === a.id} />
+          <ArtworkPiece a={a} texture={textures[i]} mats={mats} shared={shared} hi={hiId === a.id} detail={detailIds.includes(a.id)} />
           <ArtSpot a={a} mats={mats} />
         </group>
       ))}

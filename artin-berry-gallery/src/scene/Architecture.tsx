@@ -313,7 +313,7 @@ function Floor() {
   const quality = useGallery((s) => s.quality)
   const gl = useThree((s) => s.gl)
   const marble = useMemo(() => {
-    const t = marbleTexture(2048)
+    const t = marbleTexture(useGallery.getState().isTouch ? 512 : 2048)
     t.repeat.set(28.8 / 4.2, 26.6 / 4.2)
     t.anisotropy = Math.min(16, gl.capabilities.getMaxAnisotropy())
     return t

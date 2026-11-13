@@ -16,6 +16,8 @@ export interface Artwork {
   description?: string
   /** texture utilisée dans la scène 3D */
   image: string
+  /** aperçu léger utilisé au démarrage et pour les œuvres éloignées */
+  imagePreview?: string
   /** fichier original, affiché dans la visionneuse plein écran */
   imageFull?: string
   room?: string
