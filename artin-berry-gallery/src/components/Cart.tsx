@@ -26,7 +26,7 @@ export function Cart() {
             <ul className="menu__list cart__list">
               {lines.map((a) => (
                 <li key={a.id}>
-                  <img src={asset(a.image)} alt="" />
+                  <img src={asset(a.imagePreview ?? a.image)} alt="" />
                   <span className="cart__info">
                     <em>{a.title}</em>
                     <small>{[a.artist, a.dimensions].filter(Boolean).join(' · ')}</small>

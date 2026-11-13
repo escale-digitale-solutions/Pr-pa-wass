@@ -51,7 +51,9 @@ interface GalleryState {
 const CART_KEY = 'artin-berry-panier'
 function loadCart(): Record<string, number> {
   try {
-    return JSON.parse(window.localStorage.getItem(CART_KEY) ?? '{}')
+    const parsed = JSON.parse(window.localStorage.getItem(CART_KEY) ?? '{}')
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return {}
+    return Object.fromEntries(Object.entries(parsed).filter(([, qty]) => typeof qty === 'number' && Number.isSafeInteger(qty) && qty > 0 && qty <= 999)) as Record<string, number>
   } catch {
     return {}
   }
@@ -95,7 +97,7 @@ export const useGallery = create<GalleryState>((set, get) => ({
   helpOpen: false,
   veil: false,
   hintShown: false,
-  quality: forced && ['high', 'medium', 'low'].includes(forced) ? forced : isTouch ? 'medium' : 'high',
+  quality: isTouch ? 'low' : forced && ['high', 'medium', 'low'].includes(forced) ? forced : 'medium',
   qualityLocked: !!forced,
   isTouch,
   setReady: () => set({ ready: true }),
@@ -118,7 +120,7 @@ export const useGallery = create<GalleryState>((set, get) => ({
     else if (quality === 'medium') set({ quality: 'low' })
   },
   // choix manuel : désactive l'adaptation automatique
-  setQuality: (q) => set({ quality: q, qualityLocked: true }),
+  setQuality: (q) => set({ quality: isTouch ? 'low' : q, qualityLocked: true }),
 }))
 
 /** Manette tactile : valeurs lues à chaque image par le contrôleur de déplacement. */

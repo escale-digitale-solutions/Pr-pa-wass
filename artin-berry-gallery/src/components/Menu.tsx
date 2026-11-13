@@ -10,6 +10,7 @@ export function Menu() {
   useEffect(() => {
     if (open) setHasOpened(true)
   }, [open])
+  const isTouch = useGallery((s) => s.isTouch)
   const quality = useGallery((s) => s.quality)
   const { setMenu, select, goHome, setHelp, setQuality } = useGallery.getState()
   const rooms = Array.from(new Set(ARTWORKS.map((a) => a.room ?? 'Galerie')))
@@ -53,7 +54,7 @@ export function Menu() {
                 ['medium', 'Équilibrée'],
                 ['low', 'Légère'],
               ] as const
-            ).map(([q, label]) => (
+            ).filter(([q]) => !isTouch || q === 'low').map(([q, label]) => (
               <button key={q} className={quality === q ? 'is-active' : ''} onClick={() => setQuality(q)} tabIndex={open ? 0 : -1}>
                 {label}
               </button>

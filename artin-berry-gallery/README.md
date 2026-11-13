@@ -31,7 +31,11 @@ Le dossier `dist/` est un site statique : il se dépose tel quel sur Netlify, Ve
 | Ouvrir une fiche | clic sur l'œuvre, ou Entrée quand la légende s'affiche | toucher l'œuvre |
 | Fermer | Échap ou bouton × | bouton × |
 
-Le menu « Œuvres » liste les pièces exposées (la caméra s'y rend toute seule) et permet de choisir la qualité du rendu : Haute (effets d'ambiance, par défaut sur ordinateur), Équilibrée (par défaut sur téléphone et tablette) ou Légère (sans reflets au sol). Sans choix manuel, la qualité baisse automatiquement si l'appareil peine ; la netteté de l'image, elle, est conservée.
+L'application s'ouvre sur un catalogue sans WebGL : images légères, descriptions, prix et panier. Le bouton « Visiter en 3D » charge le moteur immersif uniquement à la demande. « Retour au catalogue » libère la scène. Une erreur de rendu ou une perte du contexte graphique ramène au catalogue sans relancer automatiquement la 3D.
+
+Sur téléphone et tablette, la visite utilise exclusivement la qualité Légère : définition logique de l'écran, sans reflets ni effets avancés, sans lissage multisample, sans chargement d'originaux dans la scène et avec un marbre de 512 px. La visionneuse utilise les textures détaillées de 1024 px sur mobile. Sur ordinateur, le niveau Équilibré est choisi par défaut ; Haute reste disponible manuellement. Le rendu s'arrête quand l'onglet est masqué.
+
+Ces mesures réduisent la charge et offrent un accès sans 3D. Elles ne garantissent pas le fonctionnement de la 3D sur tous les appareils ; un redémarrage système doit être reproduit sur le modèle concerné pour confirmer sa cause.
 
 ## Modifier ou ajouter une œuvre
 
@@ -102,11 +106,11 @@ Fichiers clés de la scène :
 ## Choix techniques
 
 - React 19, Vite, Three.js, React Three Fiber, Drei, postprocessing.
-- **Netteté** : l'image est calculée à la définition de l'écran (jusqu'à 2,5 fois la définition logique sur téléphone, 2 fois sur ordinateur) avec lissage matériel des contours.
+- **Définition** : plafond de 1 sur mobile et 1,5 sur ordinateur (1 en qualité Légère), pour limiter la mémoire graphique. Le catalogue n'utilise aucun contexte WebGL.
 - **Lumière peinte** : aucune source lumineuse n'est calculée à chaque image. Les nappes des projecteurs, les halos des gorges lumineuses, les ombres portées et la tache de soleil sont peints sur les surfaces ; seule une lumière d'ambiance diffuse est calculée, une fois. La puissance de l'appareil va à la netteté.
 - **Sol** : marbre noir veiné dessiné au chargement (aucun fichier image), poli, avec le reflet de l'architecture et des œuvres.
 - En qualité Haute s'ajoutent l'occlusion ambiante (N8AO) et le halo des sources lumineuses.
-- **Œuvres** : sans éclairage ni correction de tons. Au démarrage, les 12 aperçus de 512 px représentent environ 1,2 Mo, contre 5,5 Mo pour les textures de 1024 px. À moins de 8 m (ou à l'ouverture d'une fiche), la texture détaillée est chargée sans bloquer la visite ; l'œuvre la plus proche passe ensuite sur le fichier original en pleine résolution si la carte graphique le permet. Les textures détaillées sont libérées lorsque le visiteur s'éloigne. Les fichiers originaux et les textures de 1024 px ne sont jamais retouchés.
+- **Œuvres** : sans éclairage ni correction de tons. Au démarrage, les 12 aperçus de 512 px représentent environ 1,2 Mo, contre 5,5 Mo pour les textures de 1024 px. À moins de 8 m (ou à l'ouverture d'une fiche), la texture détaillée est chargée sans bloquer la visite ; l'œuvre la plus proche passe ensuite sur le fichier original en pleine résolution sur ordinateur si la carte graphique le permet. Les textures détaillées sont libérées lorsque le visiteur s'éloigne. Les fichiers originaux et les textures de 1024 px ne sont jamais retouchés.
 - **Chargement** : matériaux, logo mural et aperçus sont demandés en parallèle. Le menu ne télécharge aucune vignette avant sa première ouverture ; il réutilise ensuite les aperçus. Les effets de qualité Haute sont téléchargés séparément après l'ouverture de la galerie, uniquement lorsque ce niveau est actif.
 - Aucun serveur, aucune base de données, aucune dépendance en ligne à l'exécution.
 
@@ -135,3 +139,7 @@ Le workflow `.github/workflows/deploy-pages.yml` publie la galerie à chaque mis
 **https://escale-digitale-solutions.github.io/Pr-pa-wass/**
 
 Activation (une seule fois) : dans le dépôt GitHub, *Settings → Pages → Build and deployment → Source : GitHub Actions*. Le workflow peut aussi être relancé à la main depuis l'onglet *Actions*.
+
+## Espace professionnel
+
+Le besoin multi-professionnels et les étapes restant à réaliser sont décrits dans [docs/espace-professionnel.md](docs/espace-professionnel.md). Les comptes privés et la publication des galeries ne sont pas encore implémentés.

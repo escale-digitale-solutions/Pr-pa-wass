@@ -198,7 +198,7 @@ function usePanelTexture(a: Artwork, inCart: boolean, hi: boolean) {
     let alive = true
     // une texture par résolution : on ne redimensionne jamais une texture déjà envoyée à la carte graphique
     const c = document.createElement('canvas')
-    const k = hi ? 2 : 1
+    const k = hi && !useGallery.getState().isTouch ? 2 : 1
     c.width = PW * k
     c.height = PH * k
     const t = new THREE.CanvasTexture(c)
@@ -448,7 +448,7 @@ function ArtworkPiece({ a, texture, mats, shared, hi, detail }: { a: Artwork; te
   const panel = usePanelTexture(a, inCart, hi)
   const gl = useThree((s) => s.gl)
   const detailed = useArtworkTexture(a.imagePreview ? a.image : undefined, detail)
-  const original = useArtworkTexture(a.imageFull, hi && gl.capabilities.maxTextureSize >= 4096)
+  const original = useArtworkTexture(a.imageFull, hi && !useGallery.getState().isTouch && gl.capabilities.maxTextureSize >= 4096)
   // la nappe du projecteur éclaire le mur : elle prend donc sa couleur
   const poolColor = useMemo(() => new THREE.Color(wallColorAt(pose.x + pose.nx * 0.3, pose.z + pose.nz * 0.3) ?? '#f2efe9').multiplyScalar(0.58), [pose])
 
